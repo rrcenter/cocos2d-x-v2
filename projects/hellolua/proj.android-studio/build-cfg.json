@@ -1,0 +1,16 @@
+{
+    "ndk_module_path" :[
+        "../../../",
+        "../../../cocos2dx",
+        "../../../cocos2dx/platform/third_party/android/prebuilt",
+        "../../../external/",
+        "../../../extensions",
+        "../../../CocosDenshion/android"
+    ],
+    "copy_resources": [
+        {
+            "from": "../Resources",
+            "to": ""
+        }
+    ]
+}

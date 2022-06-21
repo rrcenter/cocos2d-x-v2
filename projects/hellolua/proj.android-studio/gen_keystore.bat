@@ -1,0 +1,1 @@
+keytool.exe -genkey -v -keystore app.keystore -alias android -keyalg RSA -keysize 2048 -validity 20000 -dname "CN=Android,O=Android,C=US"

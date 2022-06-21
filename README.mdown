@@ -1,0 +1,101 @@
+cocos2d-x
+=========
+
+## Games
+1. https://play.google.com/store/apps/details?id=com.sosc.firstfantasy1
+
+## tested
+1. cocos command 3.8.1 with ndk-r10d
+
+    ```
+    cocos run -p android --android-studio --app-abi armeabi-v7a:arm64-v8a
+    cocos run -p android --android-studio --app-abi armeabi-v7a:arm64-v8a -m release
+    ```
+
+2. cocos command 3.8.1 with ndk-r14b
+
+    ```
+    cocos run -p android --android-studio --app-abi armeabi-v7a:arm64-v8a:x86
+    cocos run -p android --android-studio --app-abi armeabi-v7a:arm64-v8a:x86 -m release
+    ```
+
+3. hellolua with win32 (vs2019)/android studio project(3.2.1)
+
+## setup
+- Android Studio 3.2.1 ([Mac](https://redirector.gvt1.com/edgedl/android/studio/ide-zips/3.2.1.0/android-studio-ide-181.5056338-mac.zip)/[Windows](https://redirector.gvt1.com/edgedl/android/studio/ide-zips/3.2.1.0/android-studio-ide-181.5056338-windows.zip))
+- Android Studio 4.1.2 (Windows)
+- NDK: r10d / r14b
+- PROP_APP_ABI=armeabi-v7a:arm64-v8a:x86
+- [keystore](projects/hello/proj.android-studio/gen_keystore.bat) config with [gradle.properties](projects/hello/proj.android-studio/app/gradle.properties):
+  ```
+  keytool.exe -genkey -v -keystore app.keystore -alias android -keyalg RSA -keysize 2048 -validity 20000 -dname "CN=Android,O=Android,C=US"
+  ```
+  
+Set Android NDK location:
+![](document/ndk_settings.png)
+
+
+
+1. Update libs to 3.16
+    - libjpeg
+    - libpng (1.6.16)
+    - libtiff (20120922)
+    - libwebp
+    - libcurl (7.52.1)
+    - openssl (OpenSSL 1.1.0c  10 Nov 2016)
+    - zlib (1.2.8)
+
+2. Remove armeabi
+
+3. Not build http & websocket (maybe rebuild old curl version to support http)
+
+4. Android Studio support
+
+5. Keep iOS,Android,Win32,Mac platform
+
+6. Remove Javascript
+
+7. Add `void CCScheduler::performFunctionInCocosThread(const std::function<void ()> &function)`
+
+   ```c++
+   CCLog("> Current cocos thread = %lu", std::hash<std::thread::id>{}(std::this_thread::get_id()));
+   std::thread th ([pDirector]() {
+       CCLog("> Hello from thread = %lu", std::hash<std::thread::id>{}(std::this_thread::get_id()));
+       pDirector->getScheduler()->performFunctionInCocosThread([]() {
+           CCLog("> Hello from cocos thread = %lu", std::hash<std::thread::id>{}(std::this_thread::get_id()));
+       });
+   });
+   th.join();
+   ```
+
+8. Support 64bit Android
+
+9. c++11 runtime
+
+10. libwebsocket support Android arm64
+
+11. [ImGui](https://github.com/ocornut/imgui) 1.79 on macOS
+    ![](document/imgui.png)
+
+12. fix [getFileData](cocos2dx/platform/CCFileUtils.h#L99) crash when multi thread
+
+13. Preserve EGL context when the GLSurfaceView is paused
+
+14. http: SSL certificate problem: unable to get local issuer certificate
+    (
+    CURLOPT_SSL_VERIFYPEER, 1L
+    CURLOPT_SSL_VERIFYHOST, 2L
+    )
+
+
+## TODO
+
+1. [x] NDK >= r13b
+
+[cocos2d-x][1] is a multi-platform 2D game framework in C++, branched on
+[cocos2d-iphone][2] and licensed under MIT.
+
+
+[1]: http://www.cocos2d-x.org "cocos2d-x"
+[2]: http://www.cocos2d-iphone.org "cocos2d for iPhone"
+
