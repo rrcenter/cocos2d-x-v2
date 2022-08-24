@@ -1,21 +1,23 @@
-import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.internal.os.OperatingSystem;
 
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
     buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "org.cocos.hello"
-        minSdkVersion 10
-        targetSdkVersion 26
+        minSdkVersion 16
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
         externalNativeBuild {
             if (PROP_BUILD_TYPE == 'ndk-build') {
                 ndkBuild {
+                    // > Unexpected native build target cocos2dcpp_shared. Valid values are: cocos2dcpp, extension, cpufeatures, box2d, cocos2d, chipmunk, cocosdenshion
+
                     targets 'cocos2dcpp'
                     // arguments 'NDK_TOOLCHAIN_VERSION=clang'
                     // arguments '-j' + Runtime.runtime.availableProcessors()
@@ -35,7 +37,7 @@ android {
                                         // project.file("../../cocos2d/cocos").absolutePath,
                                         // project.file("../../cocos2d/external").absolutePath
                                         ]
-                    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+                    if (OperatingSystem.current().isWindows()) {
                         // should use '/'
                         module_paths = module_paths.collect {it.replaceAll('\\\\', '/')}
                         arguments 'NDK_MODULE_PATH=' + module_paths.join(";")
@@ -124,8 +126,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':libcocos2dx')
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':libcocos2dx')
 }
 
 task cleanAssets(type: Delete) {

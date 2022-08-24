@@ -37,7 +37,7 @@ SubmissionInfo
 *.hps
 
 # Ignore files build by ndk and eclipse
-libs/
+#libs/
 bin/
 obj/
 gen/
@@ -127,3 +127,4 @@ tags
 /external/version.json
 
 .idea
+.cxx

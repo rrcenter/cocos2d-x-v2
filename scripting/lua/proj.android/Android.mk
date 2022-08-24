@@ -52,5 +52,5 @@ LOCAL_EXPORT_CFLAGS += -Wno-psabi
 
 include $(BUILD_STATIC_LIBRARY)
 
-$(call import-module,scripting/lua/luajit/prebuilt/android)
+#$(call import-module,lua/lua)
 $(call import-module,extensions)
