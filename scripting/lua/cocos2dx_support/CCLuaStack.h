@@ -25,9 +25,7 @@
 #ifndef __CC_LUA_STACK_H_
 #define __CC_LUA_STACK_H_
 
-extern "C" {
-#include "lua.h"
-}
+#include "lua.hpp"
 
 #include "ccTypes.h"
 #include "cocoa/CCObject.h"

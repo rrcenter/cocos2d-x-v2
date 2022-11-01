@@ -1,6 +1,10 @@
 {
+    "luaide.ignoreDir": [
+        "${workspaceRoot}/projects/hellolua/proj.android-studio"
+    ],
     "cmake.configureOnOpen": false,
     "files.associations": {
-        "cstdlib": "cpp"
+        "cstdlib": "cpp",
+        "xstring": "cpp"
     }
 }

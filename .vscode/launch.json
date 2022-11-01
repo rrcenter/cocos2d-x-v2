@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+
+        {
+            "name": "Cocos-Launch-lite",
+            "type": "lua",
+            "request": "launch",
+            "runtimeType": "Cocos2",
+            "localRoot": "${workspaceRoot}/projects/hellolua/Resources/src",
+            "mainFile": "src/main.lua",
+            "commandLine": [
+                "--width 640",
+                "--height 1136",
+                "--scale 50"
+            ],
+            "port": 7003,
+            "exePath": "${workspaceFolder}/projects/hellolua/proj.win32/Debug.win32/hellolua.exe",
+            "printType": 1
+        },
+        {
+            "name": "Cocos2-launch",
+            "type": "lua",
+            "request": "launch",
+            "runtimeType": "Cocos2",
+            "localRoot": "${workspaceRoot}/projects/hellolua/Resources/src",
+            "commandLine": "--width 640 --height 1136 --scale 50",
+            "port": 7003,
+            "exePath": "${workspaceFolder}/projects/hellolua/proj.win32/Debug.win32/hellolua.exe",
+            "fileExtNames": [
+                ".lua",
+                ".txt",
+                ".lua.txt",
+                ".bytes"
+            ],
+            "isFoxGloryProject": false,
+            "printType": 1
+        },
+        
+
+        {
+            "type": "emmylua_launch",
+            "request": "launch",
+            "name": "Attach by launch program2",
+            "program": "${workspaceFolder}/projects/hellolua/proj.win32/Debug.win32/hellolua.exe",
+            "workingDir": "${workspaceFolder}",
+            "arguments": ["--width", 640, "--height", 1136, "--scale", 50],
+            "blockOnExit": true
+        },
+        {
+            "type": "emmylua_launch",
+            "request": "launch",
+            "name": "Attach by launch program",
+            "program": "${workspaceFolder}/projects/hellolua/proj.win32/Debug.win32/hellolua.exe",
+            "workingDir": "${workspaceFolder}",
+            "arguments": [ "--width", 640, "--height", 1136, "--scale", 50],
+            "blockOnExit": true,
+            "useWindowsTerminal": false
+        }
+    ]
+}

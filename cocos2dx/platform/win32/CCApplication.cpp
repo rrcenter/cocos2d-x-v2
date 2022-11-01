@@ -50,7 +50,7 @@ int CCApplication::run()
     }
 
     CCEGLView* pMainWnd = CCEGLView::sharedOpenGLView();
-    pMainWnd->centerWindow();
+    //pMainWnd->centerWindow();
     ShowWindow(pMainWnd->getHWnd(), SW_SHOW);
 
     while (1)

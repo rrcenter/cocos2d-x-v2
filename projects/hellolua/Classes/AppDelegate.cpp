@@ -7,6 +7,7 @@
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include "Lua_web_socket.h"
 #endif
+#include "luabinding/engine/LuaCocosExt.h"
 
 using namespace CocosDenshion;
 
@@ -40,6 +41,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     CCLuaStack *pStack = pEngine->getLuaStack();
     lua_State *tolua_s = pStack->getLuaState();
     tolua_extensions_ccb_open(tolua_s);
+    register_cc_ext(tolua_s);
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
     pStack = pEngine->getLuaStack();
     tolua_s = pStack->getLuaState();
@@ -51,11 +53,21 @@ bool AppDelegate::applicationDidFinishLaunching()
 #endif
     
     auto fs = CCFileUtils::sharedFileUtils();
+    std::string upPath = fs->getWritablePath() + "/up/"; // 1.
+    fs->addSearchPath(upPath.c_str());
+    fs->addSearchPath("gdatas/"); // 2
+    auto gdatasDir = fs->fullPathForFilename("gdatas/lookup");
+    CCLOG("rr:gdatas:%s", gdatasDir.c_str());
+    if (fs->isFileExist(gdatasDir))
+    {
+        fs->loadFilenameLookupDictionaryFromFile(gdatasDir.c_str());
+    }
+    auto path = fs->fullPathForFilename("HelloWorld.png");
+    CCLOG("rr:%s", path.c_str());
     fs->addSearchPath("src");
     fs->addSearchPath("res");
 
-    std::string path = CCFileUtils::sharedFileUtils()->fullPathForFilename("hello.lua");
-    pEngine->executeScriptFile(path.c_str());
+    pEngine->executeString("require 'main'");
 
     return true;
 }

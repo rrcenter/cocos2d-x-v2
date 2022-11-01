@@ -40,7 +40,7 @@ extern "C" {
 
 #define TOLUA_PROTECTED_DESTRUCTOR
 #define TOLUA_PROPERTY_TYPE(p)
-    
+
 #define TOLUA_VALUE_ROOT "tolua_value_root"
 
 typedef int lua_Object;
@@ -121,7 +121,7 @@ TOLUA_API void tolua_pushfieldusertype (lua_State* L, int lo, int index, void* v
 TOLUA_API void tolua_pushfieldusertype_and_takeownership (lua_State* L, int lo, int index, void* v, const char* type);
     
 TOLUA_API void tolua_pushusertype_and_addtoroot (lua_State* L, void* value, const char* type);
-TOLUA_API void tolua_add_value_to_root (lua_State* L, void* value);
+TOLUA_API void tolua_add_value_to_root (lua_State* L,void* value);
 TOLUA_API void tolua_remove_value_from_root (lua_State* L, void* value);
 
 TOLUA_API lua_Number tolua_tonumber (lua_State* L, int narg, lua_Number def);

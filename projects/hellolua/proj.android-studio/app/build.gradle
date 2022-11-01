@@ -3,13 +3,14 @@ import org.gradle.internal.os.OperatingSystem;
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    // https://developer.android.com/distribute/best-practices/develop/target-sdk
+    compileSdkVersion 30
     buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "org.cocos.lua226"
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -35,7 +36,7 @@ android {
                                         // project.file("../../cocos2d/cocos").absolutePath,
                                         // project.file("../../cocos2d/external").absolutePath
                                         ]
-                    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+                    if (OperatingSystem.current().isWindows()) {
                         // should use '/'
                         module_paths = module_paths.collect {it.replaceAll('\\\\', '/')}
                         arguments 'NDK_MODULE_PATH=' + module_paths.join(";")
@@ -134,7 +135,48 @@ task cleanAssets(type: Delete) {
 task copyAssets(type: Copy) {
     from '../../Resources'
     into 'assets'
+
+    println 'copy asset'
+}
+
+task clean_assets(type: Delete) {
+    delete 'assets/'
+}
+
+task dealWith(type:Exec) {
+    def compileArgs = []
+    def project_root_folder = "${projectDir}/../../"
+
+    def need_crypt = 1
+    def copy_to_assets_script = project_root_folder + "/tools/copy_to_assets.py"
+
+    println(project_root_folder)
+//    workingDir ${project_root_folder}
+
+    //on windows:
+    commandLine 'python3', '-V'
+
+
+//    if (doEncrypt) {
+//        compileArgs << '-e'
+//        compileArgs << '-k'
+//        compileArgs << project.property('PROP_LUA_ENCRYPT_KEY')
+//        compileArgs << '-b'
+//        compileArgs << project.property('PROP_LUA_ENCRYPT_SIGN')
+//    }
+
+    compileArgs << copy_to_assets_script
+    compileArgs << need_crypt
+    // commandLine compileArgs
+    println 'running command : ' + 'python3 ' + compileArgs.join(' ')
+    exec {
+//        // if you meet problem, just replace `getCocosCommandPath()` to the path of cocos command
+////        executable getCocosCommandPath()
+        executable 'python3'
+        args compileArgs
+    }
 }
 
 clean.dependsOn cleanAssets
-preBuild.dependsOn copyAssets
+preBuild.dependsOn dealWith
+

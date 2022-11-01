@@ -85,7 +85,11 @@ void MciPlayer::Open(const char* pFileName, UINT uId)
         mciOpen.lpstrDeviceType = (LPCTSTR)MCI_ALL_DEVICE_ID;
         mciOpen.lpstrElementName = pFileName;
 
-        mciError = mciSendCommand(0,MCI_OPEN, MCI_OPEN_ELEMENT, (DWORD)&mciOpen);
+        mciError = mciSendCommand(0, MCI_OPEN, MCI_OPEN_ELEMENT, (DWORD)&mciOpen);
+        if (mciError)
+        {
+            printf("Can not Open:[%s], mciError=%u\n", pFileName, mciError);
+        }
         BREAK_IF(mciError);
 
         m_hDev = mciOpen.wDeviceID;

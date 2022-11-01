@@ -40,8 +40,10 @@ THE SOFTWARE.
     #define isnan   _isnan
 #endif
 
+#if defined(_MSC_VER) && _MSC_VER < 1500 // VC++ 8.0 and below
 #ifndef snprintf
 #define snprintf _snprintf
+#endif
 #endif
 
 #endif // __MINGW32__

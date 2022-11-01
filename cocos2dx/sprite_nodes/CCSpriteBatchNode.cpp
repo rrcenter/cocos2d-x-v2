@@ -129,6 +129,8 @@ CCSpriteBatchNode::~CCSpriteBatchNode()
 // don't call visit on it's children
 void CCSpriteBatchNode::visit(void)
 {
+    m_drawOrder = ++g_drawOrder;
+
     CC_PROFILER_START_CATEGORY(kCCProfilerCategoryBatchSprite, "CCSpriteBatchNode - visit");
 
     // CAREFUL:

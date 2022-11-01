@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>filenames</key>
+	<dict>
+		<key>AudioEngine.lua</key>
+		<string>65/ead5ca1d1adfd5843005d8f32a9b5b</string>
+		<key>CCBReaderLoad.lua</key>
+		<string>64/2bb79644c7d6894ae3fdbeeee5d5af</string>
+		<key>CocoStudio.lua</key>
+		<string>91/2890330c92fc149d1917276e340532</string>
+		<key>Cocos2d.lua</key>
+		<string>7e/bec4002a0bd05100051b335f552735</string>
+		<key>HelloWorld.png</key>
+		<string>f3/bdbd3ec1cdcb29beddbc3121969385</string>
+		<key>background.mp3</key>
+		<string>d3/f69dd53e222cb5f83abac7051a85f5</string>
+		<key>background.ogg</key>
+		<string>d6/5c79eb224cde3580641fdc2f8038c2</string>
+		<key>crop.png</key>
+		<string>55/18e464d93865c4ca41d5515322f3ae</string>
+		<key>dog.png</key>
+		<string>4d/900b5f24aab406ed9199b2b3e3b6f6</string>
+		<key>effect1.wav</key>
+		<string>27/8b425403f9f73043939a54abff71db</string>
+		<key>extern.lua</key>
+		<string>0e/dcd97da80d2acb8026734da63bd46a</string>
+		<key>farm.jpg</key>
+		<string>1a/594764396bbfc1756e6f76958fb87f</string>
+		<key>fonts/Marker Felt.ttf</key>
+		<string>63/8682f67b7be8f9146353ca534c075b</string>
+		<key>hello.lua</key>
+		<string>24/29b6800478703b7daaa376b5ba16d0</string>
+		<key>hello2.lua</key>
+		<string>6b/5089211522f61f8e2686ee87b69406</string>
+		<key>json.lua</key>
+		<string>20/a1a71df720a6424a10fcf91bd099d1</string>
+		<key>land.png</key>
+		<string>50/1e6cd4691055dc683af9a67e44f5c3</string>
+		<key>menu1.png</key>
+		<string>db/140c73a9ab7821ad07baa490cb8bfe</string>
+		<key>menu2.png</key>
+		<string>0e/f6901075ef279dea587dc2a1aed80f</string>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>version</key>
+		<integer>1</integer>
+	</dict>
+</dict>
+</plist>

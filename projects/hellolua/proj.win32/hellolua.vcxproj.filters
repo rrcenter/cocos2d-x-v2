@@ -7,6 +7,27 @@
     <Filter Include="win32">
       <UniqueIdentifier>{037a9a02-b906-4cc5-ad98-304acd4e25ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\desktop">
+      <UniqueIdentifier>{f0b44072-77b4-4473-aaea-6d8b7b24595e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\desktop\core">
+      <UniqueIdentifier>{50b1fcf4-1d95-4a92-bc18-22804a4fa911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\desktop\simulator">
+      <UniqueIdentifier>{f94537f9-405d-46f2-8e52-87470ab3c4d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\desktop\simulator\win32">
+      <UniqueIdentifier>{3928b936-8ce7-4bb1-9c60-ba400f285ee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\desktop\simulator\ProjectConfig">
+      <UniqueIdentifier>{81c20ba4-e26f-4440-9eab-9a3ce5a662e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\luabinding">
+      <UniqueIdentifier>{95302742-3124-4e73-9bbb-4cf63d004aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\luabinding\engine">
+      <UniqueIdentifier>{8e1b5705-8db3-443a-8852-da2399527061}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h">
@@ -15,6 +36,58 @@
     <ClInclude Include="main.h">
       <Filter>win32</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\desktop\rrcore\rrAppInfo.h">
+      <Filter>Classes\desktop\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\rrcore\rrCoreUtils.h">
+      <Filter>Classes\desktop\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\rrcore\rrPathInfo.h">
+      <Filter>Classes\desktop\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\rrcore\rrPublic.h">
+      <Filter>Classes\desktop\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\PlayerMacros.h">
+      <Filter>Classes\desktop\simulator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\PlayerMenuServiceProtocol.h">
+      <Filter>Classes\desktop\simulator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\PlayerProtocol.h">
+      <Filter>Classes\desktop\simulator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\PlayerServiceProtocol.h">
+      <Filter>Classes\desktop\simulator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\SimulatorExport.h">
+      <Filter>Classes\desktop\simulator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\win32\PlayerMenuServiceWin.h">
+      <Filter>Classes\desktop\simulator\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\win32\PlayerProtocolWin.h">
+      <Filter>Classes\desktop\simulator\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\SimulatorPublic.h">
+      <Filter>Classes\desktop\simulator</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulatorWin.h" />
+    <ClInclude Include="..\Classes\desktop\rrcore\rrFileUtil.h">
+      <Filter>Classes\desktop\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\ProjectConfig\ProjectConfig.h">
+      <Filter>Classes\desktop\simulator\ProjectConfig</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\simulator\ProjectConfig\SimulatorConfig.h">
+      <Filter>Classes\desktop\simulator\ProjectConfig</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\desktop\rrcore\rrStringUtil.h">
+      <Filter>Classes\desktop\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\luabinding\engine\LuaCocosExt.h">
+      <Filter>Classes\luabinding\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
@@ -22,6 +95,46 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\rrcore\rrAppInfoWin32.cpp">
+      <Filter>Classes\desktop\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\rrcore\rrCoreUtilsWin32.cpp">
+      <Filter>Classes\desktop\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\rrcore\rrPathInfo.cpp">
+      <Filter>Classes\desktop\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\simulator\PlayerMenuServiceProtocol.cpp">
+      <Filter>Classes\desktop\simulator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\simulator\PlayerProtocol.cpp">
+      <Filter>Classes\desktop\simulator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\simulator\PlayerServiceProtocol.cpp">
+      <Filter>Classes\desktop\simulator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\simulator\win32\PlayerMenuServiceWin.cpp">
+      <Filter>Classes\desktop\simulator\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\simulator\win32\PlayerProtocolWin.cpp">
+      <Filter>Classes\desktop\simulator\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulatorWin.cpp" />
+    <ClCompile Include="..\Classes\desktop\rrcore\rrFileUtil.cpp">
+      <Filter>Classes\desktop\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\simulator\ProjectConfig\ProjectConfig.cpp">
+      <Filter>Classes\desktop\simulator\ProjectConfig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\simulator\ProjectConfig\SimulatorConfig.cpp">
+      <Filter>Classes\desktop\simulator\ProjectConfig</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\desktop\rrcore\rrStringUtil.cpp">
+      <Filter>Classes\desktop\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\luabinding\engine\LuaCocosExt.cpp">
+      <Filter>Classes\luabinding\engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -492,7 +492,8 @@ void CCRepeat::update(float dt)
 
             m_pInnerAction->stop();
             m_pInnerAction->startWithTarget(m_pTarget);
-            m_fNextDt += m_pInnerAction->getDuration()/m_fDuration;
+            //m_fNextDt += m_pInnerAction->getDuration()/m_fDuration;
+            m_fNextDt = m_pInnerAction->getDuration() / m_fDuration * (m_uTotal + 1);
         }
 
         // fix for issue #1288, incorrect end value of repeat

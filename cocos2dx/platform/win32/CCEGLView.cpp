@@ -637,7 +637,7 @@ void CCEGLView::resize(int width, int height)
 #ifdef _DEBUG
         char szBuf[MAX_PATH + 1];
         memset(szBuf, 0, sizeof(szBuf));
-        snprintf(szBuf, MAX_PATH, "%s - %0.0fx%0.0f - %0.2f",
+        std::snprintf(szBuf, MAX_PATH, "%s - %0.0fx%0.0f - %0.2f",
                    m_szViewName, frameSize.width, frameSize.height, m_fFrameZoomFactor);
         MultiByteToWideChar(CP_UTF8, 0, szBuf, -1, wszBuf, sizeof(wszBuf));
 #else

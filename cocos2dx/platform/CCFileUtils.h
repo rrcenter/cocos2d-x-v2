@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include <string>
 #include <vector>
 #include <map>
+#include <mutex>
 #include "CCPlatformMacros.h"
 #include "ccTypes.h"
 #include "ccTypeInfo.h"
@@ -330,6 +331,19 @@ public:
     virtual void setPopupNotify(bool bNotify);
     virtual bool isPopupNotify();
 
+    /**
+     * Get default resource root path.
+     * 
+     * @since: v3
+     */
+    const std::string getDefaultResourceRootPath() const;
+
+    /**
+     * Set default resource root path.
+     * 
+     * @since: v3
+     */
+    void setDefaultResourceRootPath(const std::string& path);
 protected:
     /**
      *  The default constructor.
@@ -430,6 +444,17 @@ protected:
      */
     std::map<std::string, std::string> m_fullPathCache;
     
+
+    /**
+    * The search paths which was set by 'setSearchPaths' / 'addSearchPath'.
+    */
+    std::vector<std::string> _originalSearchPaths;
+
+    /**
+    * mutex used to protect fields.
+    */
+    mutable std::recursive_mutex _mutex;
+
     /**
      *  The singleton pointer of CCFileUtils.
      */

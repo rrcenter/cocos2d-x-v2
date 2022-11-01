@@ -34,6 +34,8 @@ THE SOFTWARE.
 #include <stdlib.h>
 #include "ExtensionMacros.h"
 
+#if CC_USE_LOCALSTORAGE == 1
+
 /** Initializes the database. If path is null, it will create an in-memory DB */
 CC_EX_DLL void localStorageInit( const char *fullpath);
 
@@ -48,5 +50,7 @@ CC_EX_DLL const char* localStorageGetItem( const char *key );
 
 /** removes an item from the LS */
 CC_EX_DLL void localStorageRemoveItem( const char *key );
+
+#endif // #if CC_USE_LOCALSTORAGE == 1
 
 #endif // __JSB_LOCALSTORAGE_H

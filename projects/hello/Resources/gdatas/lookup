@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>filenames</key>
+	<dict>
+		<key>CloseNormal.png</key>
+		<string>d7/db400d0d9596f2bf62f74dc8220d21</string>
+		<key>CloseSelected.png</key>
+		<string>aa/11c5090eeda31a7b8f87d6516282ec</string>
+		<key>HelloWorld.png</key>
+		<string>f3/bdbd3ec1cdcb29beddbc3121969385</string>
+		<key>cacert.pem</key>
+		<string>b0/3c08f91a00a60ac9d7daef45f3075a</string>
+		<key>fonts/Marker Felt.ttf</key>
+		<string>63/8682f67b7be8f9146353ca534c075b</string>
+		<key>fonts/arial.ttf</key>
+		<string>d8/7f78a715dbd5ad5cfb393bfa25237e</string>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>version</key>
+		<integer>1</integer>
+	</dict>
+</dict>
+</plist>

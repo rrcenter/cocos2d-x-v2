@@ -3,6 +3,7 @@
 
 #include <thread>
 
+#include <curl/curl.h>
 // fix curl with android x86 (ndk-r14) https://stackoverflow.com/a/15310563/5443510
 #if __i386 && (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include <setjmp.h>
@@ -46,7 +47,20 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
 
-    CCFileUtils::sharedFileUtils()->addSearchPath("res/");
+    auto fs = CCFileUtils::sharedFileUtils();
+    std::string upPath = fs->getWritablePath() + "/up/"; // 1.
+    fs->addSearchPath(upPath.c_str());
+    fs->addSearchPath("gdatas/"); // 2
+    auto gdatasDir = fs->fullPathForFilename("gdatas/lookup");
+    CCLOG("gdatas:%s", gdatasDir.c_str());
+
+    if (fs->isFileExist(gdatasDir))
+    {
+        fs->loadFilenameLookupDictionaryFromFile(gdatasDir.c_str());
+    }
+    fs->addSearchPath("res/");
+    auto path = fs->fullPathForFilename("HelloWorld.png");
+    CCLOG("%s", path.c_str());
     
     // create a scene. it's an autorelease object
     CCScene *pScene = HelloWorld::scene();
@@ -54,6 +68,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // run
     pDirector->runWithScene(pScene);
 
+    CCLOG("curl version: %s", curl_version());
     CCLog("> Current cocos thread = %lu", std::hash<std::thread::id>{}(std::this_thread::get_id()));
     std::thread th ([pDirector]() {
         CCLog("> Hello from thread = %lu", std::hash<std::thread::id>{}(std::this_thread::get_id()));

@@ -26,12 +26,9 @@ THE SOFTWARE.
 
 #include "cocos2d.h"
 
+#include "lua.hpp"
 extern "C"
 {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-
 extern int cocos2dx_lua_loader(lua_State *L);
 }
 

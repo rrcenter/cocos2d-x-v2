@@ -1299,7 +1299,7 @@ CCPoint CCNode::convertTouchToNodeSpaceAR(CCTouch *touch)
 
 void CCNode::updateTransform()
 {
-    m_drawOrder = g_drawOrder;
+    m_drawOrder = ++g_drawOrder;
     // Recursively iterate over children
     arrayMakeObjectsPerformSelector(m_pChildren, updateTransform, CCNode*);
 }

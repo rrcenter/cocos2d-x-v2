@@ -268,7 +268,9 @@ static bool configureCURL(CURL *handle, std::string capath = "")
     {
         // @FIX: SSL certificate problem: unable to get local issuer certificate
         curl_easy_setopt(handle, CURLOPT_CAINFO, capath.c_str());
-        
+//        https://curl.se/libcurl/c/CURLOPT_CAINFO_BLOB.html
+        // Added in 7.77.0.
+
         curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 1L);
         curl_easy_setopt(handle, CURLOPT_SSL_VERIFYHOST, 2L);
     }

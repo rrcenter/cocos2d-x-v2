@@ -24,7 +24,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v110_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -35,7 +35,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v110_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -66,9 +66,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Classes;$(ProjectDir)..\..\..\scripting\lua\cocos2dx_support;$(ProjectDir)..\..\..\scripting\lua\lua;$(ProjectDir)..\..\..\scripting\lua\tolua;$(ProjectDir)..\..\..\scripting\lua\src;$(ProjectDir)..\..\..\cocos2dx;$(ProjectDir)..\..\..\cocos2dx\include;$(ProjectDir)..\..\..\cocos2dx\kazmath\include;$(ProjectDir)..\..\..\cocos2dx\platform\win32;$(ProjectDir)..\..\..\cocos2dx\platform\third_party\win32;$(ProjectDir)..\..\..\cocos2dx\platform\third_party\win32\OGLES;$(ProjectDir)..\..\..\external;$(ProjectDir)..\..\..\external\chipmunk\include\chipmunk;$(ProjectDir)..\..\..\CocosDenshion\include;$(ProjectDir)..\..\..\scripting\lua\cocos2dx_support;$(ProjectDir)..\..\..\scripting\lua\tolua;$(ProjectDir)..\..\..\scripting\lua\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Classes;$(ProjectDir)..\..\..\scripting\lua\cocos2dx_support;$(ProjectDir)..\..\..\scripting\lua\lua;$(ProjectDir)..\..\..\scripting\lua\tolua;$(ProjectDir)..\..\..\scripting\lua\lua_extensions;$(ProjectDir)..\..\..\scripting\lua\src;$(ProjectDir)..\..\..\cocos2dx;$(ProjectDir)..\..\..\cocos2dx\include;$(ProjectDir)..\..\..\cocos2dx\kazmath\include;$(ProjectDir)..\..\..\cocos2dx\platform\win32;$(ProjectDir)..\..\..\cocos2dx\platform\third_party\win32;$(ProjectDir)..\..\..\cocos2dx\platform\third_party\win32\OGLES;$(ProjectDir)..\..\..\external;$(ProjectDir)..\..\..\external\chipmunk\include\chipmunk;$(ProjectDir)..\..\..\CocosDenshion\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -85,7 +88,9 @@
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcocos2d.lib;libExtensions.lib;opengl32.lib;glew32.lib;libBox2d.lib;libchipmunk.lib;libCocosDenshion.lib;liblua.lib;lua51.lib;websockets.lib;pthreadVCE2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcocos2d.lib;libExtensions.lib;opengl32.lib;glew32.lib;libBox2d.lib;libchipmunk.lib;libCocosDenshion.lib;liblua.lib;websockets.lib;pthreadVCE2.lib;ws2_32.lib;wsock32.lib;libzlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -105,7 +110,8 @@
       </DllDataFileName>
     </Midl>
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\..\..\scripting\lua\script" "$(ProjectDir)..\Resources\src" /e /Y</Command>
+      <Command>
+      </Command>
       <Message>
       </Message>
     </PreBuildEvent>
@@ -113,6 +119,10 @@
       <Command>if not exist "$(OutDir)" mkdir "$(OutDir)"
 xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutDir)"</Command>
     </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)misc" mkdir "$(OutDir)misc"
+xcopy /Y /Q /E "$(ProjectDir)misc\*.*" "$(OutDir)misc"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -164,11 +174,43 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\desktop\rrcore\rrAppInfo.h" />
+    <ClInclude Include="..\Classes\desktop\rrcore\rrCoreUtils.h" />
+    <ClInclude Include="..\Classes\desktop\rrcore\rrFileUtil.h" />
+    <ClInclude Include="..\Classes\desktop\rrcore\rrPathInfo.h" />
+    <ClInclude Include="..\Classes\desktop\rrcore\rrPublic.h" />
+    <ClInclude Include="..\Classes\desktop\rrcore\rrStringUtil.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\PlayerMacros.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\PlayerMenuServiceProtocol.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\PlayerProtocol.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\PlayerServiceProtocol.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\ProjectConfig\ProjectConfig.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\ProjectConfig\SimulatorConfig.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\SimulatorExport.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\SimulatorPublic.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\win32\PlayerMenuServiceWin.h" />
+    <ClInclude Include="..\Classes\desktop\simulator\win32\PlayerProtocolWin.h" />
+    <ClInclude Include="..\Classes\luabinding\engine\LuaCocosExt.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="SimulatorWin.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\desktop\rrcore\rrAppInfoWin32.cpp" />
+    <ClCompile Include="..\Classes\desktop\rrcore\rrCoreUtilsWin32.cpp" />
+    <ClCompile Include="..\Classes\desktop\rrcore\rrFileUtil.cpp" />
+    <ClCompile Include="..\Classes\desktop\rrcore\rrPathInfo.cpp" />
+    <ClCompile Include="..\Classes\desktop\rrcore\rrStringUtil.cpp" />
+    <ClCompile Include="..\Classes\desktop\simulator\PlayerMenuServiceProtocol.cpp" />
+    <ClCompile Include="..\Classes\desktop\simulator\PlayerProtocol.cpp" />
+    <ClCompile Include="..\Classes\desktop\simulator\PlayerServiceProtocol.cpp" />
+    <ClCompile Include="..\Classes\desktop\simulator\ProjectConfig\ProjectConfig.cpp" />
+    <ClCompile Include="..\Classes\desktop\simulator\ProjectConfig\SimulatorConfig.cpp" />
+    <ClCompile Include="..\Classes\desktop\simulator\win32\PlayerMenuServiceWin.cpp" />
+    <ClCompile Include="..\Classes\desktop\simulator\win32\PlayerProtocolWin.cpp" />
+    <ClCompile Include="..\Classes\luabinding\engine\LuaCocosExt.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SimulatorWin.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

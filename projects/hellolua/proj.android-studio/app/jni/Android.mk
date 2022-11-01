@@ -15,7 +15,8 @@ LOCAL_MODULE := cocos2dlua_shared
 LOCAL_MODULE_FILENAME := libcocos2dlua
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
-                   ../../../Classes/AppDelegate.cpp
+                   ../../../Classes/AppDelegate.cpp \
+                   ../../../Classes/luabinding/engine/LuaCocosExt.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 

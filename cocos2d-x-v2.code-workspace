@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"cstdlib": "cpp",
+			"xstring": "cpp"
+		},
+		"editor.snippetSuggestions": "bottom",
+		"luaide.apiType": "cocos2dx2"
+	}
+}

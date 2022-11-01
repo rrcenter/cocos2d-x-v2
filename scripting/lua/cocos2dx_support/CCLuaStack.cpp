@@ -24,13 +24,13 @@
 
 #include "CCLuaStack.h"
 
+#include "lua.hpp"
 extern "C" {
-#include "lua.h"
 #include "tolua++.h"
-#include "lualib.h"
-#include "lauxlib.h"
 #include "tolua_fix.h"
 }
+#include "lua_extensions.h"
+
 
 #include "LuaCocos2d.h"
 #include "Cocos2dxLuaLoader.h"
@@ -39,6 +39,7 @@ extern "C" {
 #include "lua_cocos2dx_extensions_manual.h"
 #include "lua_cocos2dx_cocostudio_manual.h"
 #include "xxtea.h"
+
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 #include "platform/ios/CCLuaObjcBridge.h"
@@ -126,6 +127,9 @@ bool CCLuaStack::init(void)
     register_all_cocos2dx_manual(m_state);
     register_all_cocos2dx_extension_manual(m_state);
     register_all_cocos2dx_studio_manual(m_state);
+
+    luaopen_lua_extensions(m_state);
+
     // add cocos2dx loader
     addLuaLoader(cocos2dx_lua_loader);
 

@@ -30,6 +30,8 @@
 #include "cocos2d.h"
 #include "LocalStorage.h"
 
+#if CC_USE_LOCALSTORAGE == 1
+
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID && CC_TARGET_PLATFORM != CC_PLATFORM_TIZEN)
 
 #include <stdio.h>
@@ -155,4 +157,5 @@ void localStorageRemoveItem( const char *key )
 		printf("Error in localStorage.removeItem()\n");
 }
 
+#endif // #if CC_USE_LOCALSTORAGE == 1
 #endif // #if (CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID)

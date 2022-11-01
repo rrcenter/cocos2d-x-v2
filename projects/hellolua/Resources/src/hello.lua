@@ -191,6 +191,7 @@ local function main()
     -- uncomment below for the BlackBerry version
     -- local bgMusicPath = CCFileUtils:sharedFileUtils():fullPathForFilename("background.ogg")
     local bgMusicPath = CCFileUtils:sharedFileUtils():fullPathForFilename("background.mp3")
+    print('bgMusicPath', bgMusicPath)
     AudioEngine.playMusic(bgMusicPath, true)
     local effectPath = CCFileUtils:sharedFileUtils():fullPathForFilename("effect1.wav")
     AudioEngine.preloadEffect(effectPath)

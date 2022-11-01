@@ -241,6 +241,7 @@ float SimpleAudioEngine::getBackgroundMusicVolume()
 
 void SimpleAudioEngine::setBackgroundMusicVolume(float volume)
 {
+    CCLOG("%s not completed", __FUNCTION__);
 }
 
 float SimpleAudioEngine::getEffectsVolume()
@@ -250,6 +251,7 @@ float SimpleAudioEngine::getEffectsVolume()
 
 void SimpleAudioEngine::setEffectsVolume(float volume)
 {
+    CCLOG("%s not completed", __FUNCTION__);
 }
 
 //////////////////////////////////////////////////////////////////////////

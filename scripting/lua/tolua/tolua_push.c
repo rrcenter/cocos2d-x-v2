@@ -90,7 +90,7 @@ void tolua_pushusertype_internal (lua_State* L, void* value, const char* type, i
             lua_pushvalue(L, -1);
             tolua_add_value_to_root(L, value);
         }
-    }
+    } 
 }
 
 TOLUA_API void tolua_pushvalue (lua_State* L, int lo)

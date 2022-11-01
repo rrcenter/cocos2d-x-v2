@@ -136,7 +136,47 @@ task cleanAssets(type: Delete) {
 task copyAssets(type: Copy) {
     from '../../Resources'
     into 'assets'
+
+    println 'copy asset'
 }
 
+task clean_assets(type: Delete) {
+    delete 'assets/'
+}
+
+task dealWith(type:Exec) {
+    def compileArgs = []
+    def project_root_folder = "${projectDir}/../../"
+
+    def copy_to_assets_script = project_root_folder + "/tools/copy_to_assets.py"
+
+    println(project_root_folder)
+//    workingDir ${project_root_folder}
+
+    //on windows:
+    commandLine 'python3', '-V'
+
+
+//    if (doEncrypt) {
+//        compileArgs << '-e'
+//        compileArgs << '-k'
+//        compileArgs << project.property('PROP_LUA_ENCRYPT_KEY')
+//        compileArgs << '-b'
+//        compileArgs << project.property('PROP_LUA_ENCRYPT_SIGN')
+//    }
+
+    compileArgs << copy_to_assets_script
+    // commandLine compileArgs
+    println 'running command : ' + 'python3 ' + compileArgs.join(' ')
+    exec {
+//        // if you meet problem, just replace `getCocosCommandPath()` to the path of cocos command
+////        executable getCocosCommandPath()
+        executable 'python3'
+        args compileArgs
+    }
+}
+
+//clean_assets.dependsOn copyAssets
 clean.dependsOn cleanAssets
-preBuild.dependsOn copyAssets
+preBuild.dependsOn dealWith
+

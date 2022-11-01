@@ -29,9 +29,7 @@
 #include <map>
 #include "CCLuaEngine.h"
 
-extern "C" {
-#include "lua.h"
-}
+#include "lua.hpp"
 
 using namespace std;
 

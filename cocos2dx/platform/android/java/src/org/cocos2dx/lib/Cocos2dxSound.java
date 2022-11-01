@@ -35,6 +35,8 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.Log;
 
+import org.cocos2dx.game.jkFileUtils;
+
 public class Cocos2dxSound {
 	// ===========================================================
 	// Constants
@@ -272,7 +274,8 @@ public class Cocos2dxSound {
 			if (pPath.startsWith("/")) {
 				soundID = this.mSoundPool.load(pPath, 0);
 			} else {
-				soundID = this.mSoundPool.load(this.mContext.getAssets().openFd(pPath), 0);
+//				soundID = this.mSoundPool.load(this.mContext.getAssets().openFd(pPath), 0);
+				soundID = this.mSoundPool.load(jkFileUtils.AFDfromAssets(mContext, pPath), 0);
 			}
 		} catch (final Exception e) {
 			soundID = Cocos2dxSound.INVALID_SOUND_ID;

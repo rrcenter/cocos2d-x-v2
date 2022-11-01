@@ -211,7 +211,7 @@ static int tolua_bnd_releaseownership (lua_State* L)
 
 /* Type casting
 */
-static int tolua_bnd_cast (lua_State* L)
+int tolua_bnd_cast (lua_State* L)
 {
 
     /* // old code
@@ -292,6 +292,151 @@ static int tolua_bnd_getpeer(lua_State* L) {
 };
 #endif
 
+/* Get the index which have been override
+    2014.6.5 by SunLightJuly
+ */
+static int tolua_bnd_getcfunction(lua_State* L) {
+    if (!lua_isstring(L, 2)) {
+        lua_pushstring(L, "Invalid argument #2 to getcfunction: string expected.");
+        lua_error(L);
+    }
+    
+    if (!lua_getmetatable(L, 1)) {
+        lua_pushstring(L, "Invalid argument #1 to getcfunction: class or object expected.");
+        lua_error(L);
+    }
+    
+    /* stack: class key mt */
+    while (1) {
+        lua_pushstring(L, ".backup");
+        lua_rawget(L, -2);  /* stack: class key mt mt[".backup"] */
+        if (!lua_isnil(L, -1)) {
+            lua_pushvalue(L, 2);    /* stack: class key mt mt[".backup"] key */
+            lua_rawget(L, -2);
+            if (!lua_isnil(L, -1)) { // key had been found
+                return 1;
+            }
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1);  /* stack: class key mt */
+        
+        if (!lua_getmetatable(L, -1)) {
+            break;
+        }
+        /* stack: class key mt base_mt */
+        lua_remove(L, -2);  /* stack: class key base_mt */
+    }
+    
+    return 0;
+}
+
+static int tolua_bnd_getRegValue(lua_State* L) {
+    if (lua_gettop(L)!=1) {
+        lua_pushstring(L, "Wrong number of arguments to getregval(): 1 expected.");
+        lua_error(L);
+    }
+    lua_rawget(L, LUA_REGISTRYINDEX);
+    
+    return 1;
+}
+
+static int tolua_bnd_setRegValue(lua_State* L) {
+    if (lua_gettop(L)!=2) {
+        lua_pushstring(L, "Wrong number of arguments to setregval(): 2 expected.");
+        lua_error(L);
+    }
+    lua_rawset(L, LUA_REGISTRYINDEX);
+    
+    return 0;
+}
+
+static int tolua_bnd_getUbox(lua_State* L) {
+    if (lua_gettop(L)<1 || !lua_isstring(L, 1))
+    {
+        lua_pushstring(L,"tolua_ubox");
+        lua_rawget(L, LUA_REGISTRYINDEX);
+    }
+    else
+    {
+        const char *type = lua_tostring(L, 1);
+        luaL_getmetatable(L, type);     //stack: ... mt
+        if (!lua_isnil(L, -1))
+        {
+            lua_pushstring(L,"tolua_ubox"); //stack: ... mt string
+            lua_rawget(L,-2);               //stack: ... mt ubox
+        }
+    }
+    
+    return 1;
+}
+
+static int tolua_bnd_setUbox(lua_State* L) {
+    if (lua_gettop(L)!=2) {
+        lua_pushstring(L, "Wrong number of arguments to setubox(): 2 expected.");
+        lua_error(L);
+    }
+    
+    if (!lua_istable(L, 2))
+    {
+        lua_pushstring(L, "Invalid argument #2 to setubox(): table expected.");
+        lua_error(L);
+    }
+
+    if (lua_isstring(L, 1))
+    {
+        char ctype[128] = "const ";
+        const char *type = lua_tostring(L, 1);
+        luaL_getmetatable(L, type);     //stack: type newtbl mt
+        if (!lua_isnil(L, -1))
+        {
+            lua_pushstring(L,"tolua_ubox"); //stack: type newtbl mt string
+            lua_pushvalue(L, -3);           //stack: type newtbl mt string newtbl
+            lua_rawset(L,-3);               //stack: type newtbl mt
+        }
+        lua_pop(L, 1);                  //stack: type newtbl
+        strncat(ctype,type,120);
+        luaL_getmetatable(L, ctype);    //stack: type newtbl mt
+        if (!lua_isnil(L, -1))
+        {
+            lua_pushstring(L,"tolua_ubox"); //stack: type newtbl mt string
+            lua_pushvalue(L, -3);           //stack: type newtbl mt string newtbl
+            lua_rawset(L,-3);               //stack: type newtbl mt
+        }
+    }
+    else
+    {
+        lua_pushstring(L,"tolua_ubox"); //stack: type newtbl string
+        lua_insert(L, -2);              //stack: type string newtbl
+        lua_rawset(L, LUA_REGISTRYINDEX);//stack: type
+    }
+    return 0;
+}
+
+static int tolua_bnd_iskindof(lua_State *L)
+{
+    tolua_Error tolua_err;
+    const char *type;
+    if (lua_gettop(L) < 2)
+    {
+        lua_pushstring(L, "Miss arguments to iskindof.");
+        lua_error(L);
+    }
+
+    if (!lua_getmetatable(L, 1)) {
+        lua_pushstring(L, "Invalid argument #1 to iskindof: class or object expected.");
+        lua_error(L);
+    }
+    
+    type = luaL_checkstring(L, 2);
+    if (!type)
+    {
+        lua_pushstring(L, "Invalid argument #2 to iskindof: string expected.");
+        lua_error(L);
+    }
+    lua_pushboolean(L, tolua_isusertype(L, 1, type, 0, &tolua_err));
+    return 1;
+}
+
 /* static int class_gc_event (lua_State* L); */
 
 TOLUA_API void tolua_open (lua_State* L)
@@ -305,9 +450,7 @@ TOLUA_API void tolua_open (lua_State* L)
         lua_pushboolean(L,1);
         lua_rawset(L,LUA_REGISTRYINDEX);
         
-        
-        /** create value root table
-         */
+        // create value root table
         lua_pushstring(L, TOLUA_VALUE_ROOT);
         lua_newtable(L);
         lua_rawset(L, LUA_REGISTRYINDEX);
@@ -351,11 +494,9 @@ TOLUA_API void tolua_open (lua_State* L)
 
         /* create gc_event closure */
         lua_pushstring(L, "tolua_gc_event");
-        lua_pushstring(L, "tolua_gc");
-        lua_rawget(L, LUA_REGISTRYINDEX);
         lua_pushstring(L, "tolua_super");
         lua_rawget(L, LUA_REGISTRYINDEX);
-        lua_pushcclosure(L, class_gc_event, 2);
+        lua_pushcclosure(L, class_gc_event, 1);
         lua_rawset(L, LUA_REGISTRYINDEX);
 
         tolua_newmetatable(L,"tolua_commonclass");
@@ -374,6 +515,12 @@ TOLUA_API void tolua_open (lua_State* L)
         tolua_function(L, "setpeer", tolua_bnd_setpeer);
         tolua_function(L, "getpeer", tolua_bnd_getpeer);
 #endif
+        tolua_function(L,"getcfunction", tolua_bnd_getcfunction);
+        tolua_function(L,"getregval", tolua_bnd_getRegValue);
+        tolua_function(L,"setregval", tolua_bnd_setRegValue);
+        tolua_function(L,"getubox", tolua_bnd_getUbox);
+        tolua_function(L,"setubox", tolua_bnd_setUbox);
+        tolua_function(L,"iskindof", tolua_bnd_iskindof);
 
         tolua_endmodule(L);
         tolua_endmodule(L);
@@ -444,13 +591,27 @@ TOLUA_API void tolua_usertype (lua_State* L, const char* type)
 */
 TOLUA_API void tolua_beginmodule (lua_State* L, const char* name)
 {
-    if (name)
-    {
-        lua_pushstring(L,name);
-        lua_rawget(L,-2);
-    }
-    else
+    if (name) { // ... module
+//---- now module[name] is a table, get it's metatable to store keys
+        // get module[name]
+        lua_pushstring(L,name); // ... module name
+        lua_rawget(L,-2);       // ... module module[name]
+        // Is module[name] a class table?
+        lua_pushliteral(L, ".isclass");
+        lua_rawget(L, -2);                  // stack: ... module module[name] class_flag
+        if (lua_isnil(L, -1)) {
+            lua_pop(L, 1);                  // stack: ... module module[name]
+            return;                         // not a class table, use origin table
+        }
+        lua_pop(L, 1);                      // stack: ... module class_table
+        // get metatable
+        if (lua_getmetatable(L, -1)) {  // ... module class_table mt
+            lua_remove(L, -2);          // ... module mt
+        }
+//---- by SunLightJuly, 2014.6.5
+    } else {
         lua_pushvalue(L,LUA_GLOBALSINDEX);
+    }
 }
 
 /* End module
@@ -559,6 +720,7 @@ static void push_collector(lua_State* L, const char* type, lua_CFunction col) {
 */
 TOLUA_API void tolua_cclass (lua_State* L, const char* lname, const char* name, const char* base, lua_CFunction col)
 {
+    // stack: module
     char cname[128] = "const ";
     char cbase[128] = "const ";
     strncat(cname,name,120);
@@ -570,7 +732,7 @@ TOLUA_API void tolua_cclass (lua_State* L, const char* lname, const char* name, 
     mapsuper(L,cname,cbase);
     mapsuper(L,name,base);
 
-    lua_pushstring(L,lname);
+    lua_pushstring(L,lname);        // stack: module lname
 
     push_collector(L, name, col);
     /*
@@ -581,8 +743,16 @@ TOLUA_API void tolua_cclass (lua_State* L, const char* lname, const char* name, 
     lua_rawset(L,-3);
     */
 
-    luaL_getmetatable(L,name);
-    lua_rawset(L,-3);              /* assign class metatable to module */
+//---- create a new class table, set it's metatable, and assign it to module
+    lua_newtable(L);                    // stack: module lname table
+    luaL_getmetatable(L,name);          // stack: module lname table mt
+    lua_setmetatable(L, -2);            // stack: module lname table
+    //Use a key named ".isclass" to be a flag of class_table
+    lua_pushliteral(L, ".isclass");
+    lua_pushboolean(L, 1);
+    lua_rawset(L, -3);                  // stack: module lname table
+    lua_rawset(L, -3);                  // stack: module
+//---- by SunLightJuly, 2014.6.5
 
     /* now we also need to store the collector table for the const
        instances of the class */

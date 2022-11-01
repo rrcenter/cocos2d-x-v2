@@ -30,6 +30,8 @@ import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+import org.cocos2dx.game.jkFileUtils;
+
 public class Cocos2dxMusic {
 	// ===========================================================
 	// Constants
@@ -140,6 +142,8 @@ public class Cocos2dxMusic {
 		}
 	}
 
+
+
 	public void pauseBackgroundMusic() {
 		if (this.mBackgroundMediaPlayer != null && this.mBackgroundMediaPlayer.isPlaying()) {
 			this.mBackgroundMediaPlayer.pause();
@@ -227,7 +231,8 @@ public class Cocos2dxMusic {
 				mediaPlayer.setDataSource(fis.getFD());
 				fis.close();
 			} else {
-				final AssetFileDescriptor assetFileDescritor = this.mContext.getAssets().openFd(pPath);
+//				final AssetFileDescriptor assetFileDescritor = this.mContext.getAssets().openFd(pPath);
+				final AssetFileDescriptor assetFileDescritor = jkFileUtils.AFDfromAssets(mContext, pPath);
 				mediaPlayer.setDataSource(assetFileDescritor.getFileDescriptor(), assetFileDescritor.getStartOffset(), assetFileDescritor.getLength());
 			}
 

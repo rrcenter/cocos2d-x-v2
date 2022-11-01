@@ -25,10 +25,8 @@
 #ifndef __CC_LUA_ENGINE_H__
 #define __CC_LUA_ENGINE_H__
 
-extern "C" {
-#include "lua.h"
-}
 
+#include "lua.hpp"
 #include "ccTypes.h"
 #include "cocoa/CCObject.h"
 #include "touch_dispatcher/CCTouch.h"

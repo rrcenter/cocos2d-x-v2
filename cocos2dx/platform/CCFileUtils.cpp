@@ -31,8 +31,11 @@ THE SOFTWARE.
 #include "support/zip_support/unzip.h"
 #include <stack>
 #include <algorithm>
+#include <mutex>
 
 using namespace std;
+
+#define DECLARE_GUARD std::lock_guard<std::recursive_mutex> mutexGuard(_mutex)
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_IOS) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
 
@@ -696,6 +699,7 @@ const std::vector<std::string>& CCFileUtils::getSearchPaths()
 void CCFileUtils::setSearchPaths(const std::vector<std::string>& searchPaths)
 {
     bool bExistDefaultRootPath = false;
+    _originalSearchPaths = searchPaths;
 
     m_fullPathCache.clear();
     m_searchPathArray.clear();
@@ -739,6 +743,8 @@ void CCFileUtils::addSearchPath(const char* path_)
     {
         path += "/";
     }
+
+    _originalSearchPaths.push_back(path_);
     m_searchPathArray.push_back(path);
 }
 
@@ -818,6 +824,30 @@ void CCFileUtils::setPopupNotify(bool bNotify)
 bool CCFileUtils::isPopupNotify()
 {
     return s_bPopupNotify;
+}
+
+const std::string CCFileUtils::getDefaultResourceRootPath() const
+{
+    DECLARE_GUARD;
+    return m_strDefaultResRootPath;
+}
+
+void CCFileUtils::setDefaultResourceRootPath(const std::string& path)
+{
+    DECLARE_GUARD;
+    if (m_strDefaultResRootPath != path)
+    {
+        m_fullPathCache.clear();
+        m_fullPathCache.clear();
+        m_strDefaultResRootPath = path;
+        if (!m_strDefaultResRootPath.empty() && m_strDefaultResRootPath[m_strDefaultResRootPath.length() - 1] != '/')
+        {
+            m_strDefaultResRootPath += '/';
+        }
+
+        // Updates search paths
+        setSearchPaths(_originalSearchPaths);
+    }
 }
 
 NS_CC_END
