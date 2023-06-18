@@ -129,3 +129,4 @@ tags
 .idea
 .cxx
 projects/hellolua/proj.win32/.vs/
+cocos2dx/platform/android/libcocos2dx/.gradle/

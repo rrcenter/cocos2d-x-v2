@@ -14,9 +14,19 @@ LOCAL_MODULE := cocos2dlua_shared
 
 LOCAL_MODULE_FILENAME := libcocos2dlua
 
+LOCAL_SRC_CCPKG_FILES := \
+../../../Classes/ccpkg/CCPkgBridge.cpp \
+../../../Classes/ccpkg/CCPkgBridge_android.cpp \
+../../../Classes/ccpkg/CCPKGJniHelper.cpp \
+../../../Classes/ccpkg/CCPkgValue.cpp \
+../../../Classes/ccpkg/EasyJNI.cpp
+LOCAL_SRC_CCPKG_FILES += ../../../Classes/ccpkg/PluginAdMob.cpp
+
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../../Classes/AppDelegate.cpp \
                    ../../../Classes/luabinding/engine/LuaCocosExt.cpp
+
+LOCAL_SRC_FILES += $(LOCAL_SRC_CCPKG_FILES)
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 

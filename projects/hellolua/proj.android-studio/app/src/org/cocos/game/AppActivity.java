@@ -23,15 +23,20 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos.game;
 
-import org.cocos2dx.lib.Cocos2dxActivity;
+import org.ccpkg.Bridge;
+import org.ccpkg.PluginBaseActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
-public class AppActivity extends Cocos2dxActivity{
+public class AppActivity extends PluginBaseActivity {
 
+    static private String TAG = "AppActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -46,6 +51,20 @@ public class AppActivity extends Cocos2dxActivity{
 
         // DO OTHER INITIALIZATION BELOW
 	}
+
+    void testcrash() {
+         Button crashButton = new Button(this);
+         crashButton.setText("Test Crash");
+         crashButton.setOnClickListener(new View.OnClickListener() {
+             public void onClick(View view) {
+                throw new RuntimeException("Test Crash"); // Force a crash
+             }
+         });
+
+         addContentView(crashButton, new ViewGroup.LayoutParams(
+         ViewGroup.LayoutParams.MATCH_PARENT,
+         ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
 
     public Cocos2dxGLSurfaceView onCreateView() {
     	Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
