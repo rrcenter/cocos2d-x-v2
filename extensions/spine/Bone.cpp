@@ -1,53 +1,193 @@
-/*******************************************************************************
- * Copyright (c) 2013, Esoteric Software
+/******************************************************************************
+ * Spine Runtimes Software License
+ * Version 2.3
+ * 
+ * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * You are granted a perpetual, non-exclusive, non-sublicensable and
+ * non-transferable license to use, install, execute and perform the Spine
+ * Runtimes Software (the "Software") and derivative works solely for personal
+ * or internal use. Without the written permission of Esoteric Software (see
+ * Section 2 of the Spine Software License Agreement), you may not (a) modify,
+ * translate, adapt or otherwise create derivative works, improvements of the
+ * Software or develop new applications using the Software or (b) remove,
+ * delete, alter or obscure any trademarks or any copyright, trademark, patent
+ * or other intellectual property or proprietary rights notices on or in the
+ * Software, including any copy thereof. Redistributions in binary or source
+ * form must include this license and terms.
  * 
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************/
+ * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #include <spine/Bone.h>
-#include <math.h>
 #include <spine/extension.h>
-
-namespace cocos2d { namespace extension {
 
 static int yDown;
 
-void Bone_setYDown (int value) {
+void spBone_setYDown (int value) {
 	yDown = value;
 }
 
-Bone* Bone_create (BoneData* data, Bone* parent) {
-	Bone* self = NEW(Bone);
-	CONST_CAST(BoneData*, self->data) = data;
-	CONST_CAST(Bone*, self->parent) = parent;
-	Bone_setToSetupPose(self);
+int spBone_isYDown () {
+	return yDown;
+}
+
+spBone* spBone_create (spBoneData* data, spSkeleton* skeleton, spBone* parent) {
+	spBone* self = NEW(spBone);
+	CONST_CAST(spBoneData*, self->data) = data;
+	CONST_CAST(spSkeleton*, self->skeleton) = skeleton;
+	CONST_CAST(spBone*, self->parent) = parent;
+	spBone_setToSetupPose(self);
 	return self;
 }
 
-void Bone_dispose (Bone* self) {
+void spBone_dispose (spBone* self) {
 	FREE(self);
 }
 
-void Bone_setToSetupPose (Bone* self) {
+void spBone_updateWorldTransform (spBone* self) {
+	spBone_updateWorldTransformWith(self, self->x, self->y, self->rotation, self->scaleX, self->scaleY);
+}
+
+void spBone_updateWorldTransformWith (spBone* self, float x, float y, float rotation, float scaleX, float scaleY) {
+	float radians = rotation * DEG_RAD;
+	float cosine = COS(radians);
+	float sine = SIN(radians);
+	float la = cosine * scaleX, lb = -sine * scaleY, lc = sine * scaleX, ld = cosine * scaleY;
+	float pa, pb, pc, pd, temp;
+	spBone* parent = self->parent;
+
+	CONST_CAST(float, self->appliedRotation) = rotation;
+	CONST_CAST(float, self->appliedScaleX) = scaleX;
+	CONST_CAST(float, self->appliedScaleY) = scaleY;
+
+	if (!parent) { /* Root bone. */
+		if (self->skeleton->flipX) {
+			x = -x;
+			la = -la;
+			lb = -lb;
+		}
+		if (self->skeleton->flipY != yDown) {
+			y = -y;
+			lc = -lc;
+			ld = -ld;
+		}
+		CONST_CAST(float, self->a) = la;
+		CONST_CAST(float, self->b) = lb;
+		CONST_CAST(float, self->c) = lc;
+		CONST_CAST(float, self->d) = ld;
+		CONST_CAST(float, self->worldX) = x;
+		CONST_CAST(float, self->worldY) = y;
+		CONST_CAST(float, self->worldSignX) = scaleX > 0 ? 1.0f : -1.0f;
+		CONST_CAST(float, self->worldSignY) = scaleY > 0 ? 1.0f : -1.0f;
+		return;
+	}
+
+	pa = parent->a;
+	pb = parent->b;
+	pc = parent->c;
+	pd = parent->d;
+
+	CONST_CAST(float, self->worldX) = pa * x + pb * y + parent->worldX;
+	CONST_CAST(float, self->worldY) = pc * x + pd * y + parent->worldY;
+	CONST_CAST(float, self->worldSignX) = parent->worldSignX * (scaleX > 0 ? 1 : -1);
+	CONST_CAST(float, self->worldSignY) = parent->worldSignY * (scaleY > 0 ? 1 : -1);
+
+	if (self->data->inheritRotation && self->data->inheritScale) {
+		CONST_CAST(float, self->a) = pa * la + pb * lc;
+		CONST_CAST(float, self->b) = pa * lb + pb * ld;
+		CONST_CAST(float, self->c) = pc * la + pd * lc;
+		CONST_CAST(float, self->d) = pc * lb + pd * ld;
+	} else {
+		if (self->data->inheritRotation) { /* No scale inheritance. */
+			pa = 1;
+			pb = 0;
+			pc = 0;
+			pd = 1;
+			do {
+				cosine = COS(parent->appliedRotation * DEG_RAD);
+				sine = SIN(parent->appliedRotation * DEG_RAD);
+				temp = pa * cosine + pb * sine;
+				pb = pa * -sine + pb * cosine;
+				pa = temp;
+				temp = pc * cosine + pd * sine;
+				pd = pc * -sine + pd * cosine;
+				pc = temp;
+
+				if (!parent->data->inheritRotation) break;
+				parent = parent->parent;
+			} while (parent);
+			CONST_CAST(float, self->a) = pa * la + pb * lc;
+			CONST_CAST(float, self->b) = pa * lb + pb * ld;
+			CONST_CAST(float, self->c) = pc * la + pd * lc;
+			CONST_CAST(float, self->d) = pc * lb + pd * ld;
+		} else if (self->data->inheritScale) { /* No rotation inheritance. */
+			pa = 1;
+			pb = 0;
+			pc = 0;
+			pd = 1;
+			do {
+				float za, zb, zc, zd;
+				float r = parent->rotation;
+				float psx = parent->appliedScaleX, psy = parent->appliedScaleY;
+				cosine = COS(r * DEG_RAD);
+				sine = SIN(r * DEG_RAD);
+				za = cosine * psx;
+				zb = -sine * psy;
+				zc = sine * psx;
+				zd = cosine * psy;
+				temp = pa * za + pb * zc;
+				pb = pa * zb + pb * zd;
+				pa = temp;
+				temp = pc * za + pd * zc;
+				pd = pc * zb + pd * zd;
+				pc = temp;
+
+				if (psx < 0) r = -r;
+				cosine = COS(-r * DEG_RAD);
+				sine = SIN(-r * DEG_RAD);
+				temp = pa * cosine + pb * sine;
+				pb = pa * -sine + pb * cosine;
+				pa = temp;
+				temp = pc * cosine + pd * sine;
+				pd = pc * -sine + pd * cosine;
+				pc = temp;
+
+				if (!parent->data->inheritScale) break;
+				parent = parent->parent;
+			} while (parent);
+			CONST_CAST(float, self->a) = pa * la + pb * lc;
+			CONST_CAST(float, self->b) = pa * lb + pb * ld;
+			CONST_CAST(float, self->c) = pc * la + pd * lc;
+			CONST_CAST(float, self->d) = pc * lb + pd * ld;
+		} else {
+			CONST_CAST(float, self->a) = la;
+			CONST_CAST(float, self->b) = lb;
+			CONST_CAST(float, self->c) = lc;
+			CONST_CAST(float, self->d) = ld;
+		}
+		if (self->skeleton->flipX) {
+			CONST_CAST(float, self->a) = -self->a;
+			CONST_CAST(float, self->b) = -self->b;
+		}
+		if (self->skeleton->flipY != yDown) {
+			CONST_CAST(float, self->c) = -self->c;
+			CONST_CAST(float, self->d) = -self->d;
+		}
+	}
+}
+
+void spBone_setToSetupPose (spBone* self) {
 	self->x = self->data->x;
 	self->y = self->data->y;
 	self->rotation = self->data->rotation;
@@ -55,45 +195,32 @@ void Bone_setToSetupPose (Bone* self) {
 	self->scaleY = self->data->scaleY;
 }
 
-void Bone_updateWorldTransform (Bone* self, int flipX, int flipY) {
-	float radians, cosine, sine;
-	if (self->parent) {
-		CONST_CAST(float, self->worldX) = self->x * self->parent->m00 + self->y * self->parent->m01 + self->parent->worldX;
-		CONST_CAST(float, self->worldY) = self->x * self->parent->m10 + self->y * self->parent->m11 + self->parent->worldY;
-		CONST_CAST(float, self->worldScaleX) = self->parent->worldScaleX * self->scaleX;
-		CONST_CAST(float, self->worldScaleY) = self->parent->worldScaleY * self->scaleY;
-		CONST_CAST(float, self->worldRotation) = self->parent->worldRotation + self->rotation;
-	} else {
-		CONST_CAST(float, self->worldX) = flipX ? -self->x : self->x;
-		CONST_CAST(float, self->worldY) = flipX ? -self->y : self->y;
-		CONST_CAST(float, self->worldScaleX) = self->scaleX;
-		CONST_CAST(float, self->worldScaleY) = self->scaleY;
-		CONST_CAST(float, self->worldRotation) = self->rotation;
-	}
-	radians = (float)(self->worldRotation * 3.1415926535897932385 / 180);
-#ifdef __STDC_VERSION__
-	cosine = cosf(radians);
-	sine = sinf(radians);
-#else
-	cosine = (float)cos(radians);
-	sine = (float)sin(radians);
-#endif
-	CONST_CAST(float, self->m00) = cosine * self->worldScaleX;
-	CONST_CAST(float, self->m10) = sine * self->worldScaleX;
-	CONST_CAST(float, self->m01) = -sine * self->worldScaleY;
-	CONST_CAST(float, self->m11) = cosine * self->worldScaleY;
-	if (flipX) {
-		CONST_CAST(float, self->m00) = -self->m00;
-		CONST_CAST(float, self->m01) = -self->m01;
-	}
-	if (flipY) {
-		CONST_CAST(float, self->m10) = -self->m10;
-		CONST_CAST(float, self->m11) = -self->m11;
-	}
-	if (yDown) {
-		CONST_CAST(float, self->m10) = -self->m10;
-		CONST_CAST(float, self->m11) = -self->m11;
-	}
+float spBone_getWorldRotationX (spBone* self) {
+	return ATAN2(self->c, self->a) * RAD_DEG;
 }
 
-}} // namespace cocos2d { namespace extension {
+float spBone_getWorldRotationY (spBone* self) {
+	return ATAN2(self->d, self->b) * RAD_DEG;
+}
+
+float spBone_getWorldScaleX (spBone* self) {
+	return SQRT(self->a * self->a + self->b * self->b) * self->worldSignX;
+}
+
+float spBone_getWorldScaleY (spBone* self) {
+	return SQRT(self->c * self->c + self->d * self->d) * self->worldSignY;
+}
+
+void spBone_worldToLocal (spBone* self, float worldX, float worldY, float* localX, float* localY) {
+	float x = worldX - self->worldX, y = worldY - self->worldY;
+	float a = self->a, b = self->b, c = self->c, d = self->d;
+	float invDet = 1 / (a * d - b * c);
+	*localX = (x * d * invDet - y * b * invDet);
+	*localY = (y * a * invDet - x * c * invDet);
+}
+
+void spBone_localToWorld (spBone* self, float localX, float localY, float* worldX, float* worldY) {
+	float x = localX, y = localY;
+	*worldX = x * self->a + y * self->b + self->worldX;
+	*worldY = x * self->c + y * self->d + self->worldY;
+}

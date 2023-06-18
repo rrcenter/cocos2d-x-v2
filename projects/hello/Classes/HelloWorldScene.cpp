@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+#include "cocos-ext.h"
+
 USING_NS_CC;
 
 CCScene* HelloWorld::scene()
@@ -17,6 +19,55 @@ CCScene* HelloWorld::scene()
 
     // return the scene
     return scene;
+}
+
+void HelloWorld::testSpine()
+{
+    auto skeletonNode = spine::SkeletonAnimation::createWithFile("spine/spineboy.json", "spine/spineboy.atlas", 0.6f);
+
+    skeletonNode->startListener = [this, skeletonNode](int trackIndex) {
+        spTrackEntry* entry = spAnimationState_getCurrent(skeletonNode->state, trackIndex);
+        const char* animationName = (entry && entry->animation) ? entry->animation->name : 0;
+        CCLog("%d start: %s", trackIndex, animationName);
+    };
+    skeletonNode->endListener = [](int trackIndex) {
+        CCLog("%d end", trackIndex);
+    };
+    skeletonNode->completeListener = [](int trackIndex, int loopCount) {
+        CCLog("%d complete: %d", trackIndex, loopCount);
+    };
+    skeletonNode->eventListener = [](int trackIndex, spEvent* event) {
+        CCLog("%d event: %s, %d, %f, %s", trackIndex, event->data->name, event->intValue, event->floatValue, event->stringValue);
+    };
+
+    skeletonNode->setMix("walk", "jump", 0.2f);
+    skeletonNode->setMix("jump", "run", 0.2f);
+    skeletonNode->setAnimation(0, "walk", true);
+    spTrackEntry* jumpEntry = skeletonNode->addAnimation(0, "jump", false, 3);
+    skeletonNode->addAnimation(0, "run", true);
+
+    skeletonNode->setStartListener(jumpEntry, [](int trackIndex) {
+        CCLog("jumped!");
+        });
+
+    // skeletonNode->addAnimation(1, "test", true);
+    // skeletonNode->runAction(RepeatForever::create(Sequence::create(FadeOut::create(1), FadeIn::create(1), DelayTime::create(5), NULL)));
+
+    CCSize windowSize = CCDirector::sharedDirector()->getWinSize();
+    skeletonNode->setPosition(ccp(windowSize.width / 2, 20));
+    addChild(skeletonNode);
+
+    // test 2
+    {
+        auto skeletonNode = spine::SkeletonAnimation::createWithFile("spine/goblins-mesh.json", 
+            "spine/goblins-mesh.atlas", 1.5f);
+        skeletonNode->setAnimation(0, "walk", true);
+        skeletonNode->setSkin("goblin");
+
+        CCSize windowSize = CCDirector::sharedDirector()->getWinSize();
+        skeletonNode->setPosition(ccp(windowSize.width / 2, 20));
+        addChild(skeletonNode);
+    }
 }
 
 // on "init" you need to initialize your instance
@@ -74,6 +125,8 @@ bool HelloWorld::init()
 
     // add the sprite as a child to this layer
     this->addChild(pSprite, 0);
+
+    testSpine();
 
     return true;
 }

@@ -25,9 +25,9 @@
 #ifndef SPINE_JSON_H_
 #define SPINE_JSON_H_
 
-#include "ExtensionMacros.h"
-
-namespace cocos2d { namespace extension {
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Json Types: */
 #define Json_False 0
@@ -38,42 +38,46 @@ namespace cocos2d { namespace extension {
 #define Json_Array 5
 #define Json_Object 6
 
+#ifndef SPINE_JSON_HAVE_PREV
+/* Spine doesn't use the "prev" link in the Json sibling lists. */
+#define SPINE_JSON_HAVE_PREV 0
+#endif
+
 /* The Json structure: */
 typedef struct Json {
 	struct Json* next;
-	struct Json* prev; /* next/prev allow you to walk array/object chains. Alternatively, use getSize/getItemAt/getItem */
+#if SPINE_JSON_HAVE_PREV
+	struct Json* prev; /* next/prev allow you to walk array/object chains. Alternatively, use getSize/getItem */
+#endif
 	struct Json* child; /* An array or object item will have a child pointer pointing to a chain of the items in the array/object. */
 
 	int type; /* The type of the item, as above. */
+	int size; /* The number of children. */
 
-	const char* valuestring; /* The item's string, if type==Json_String */
-	int valueint; /* The item's number, if type==Json_Number */
-	float valuefloat; /* The item's number, if type==Json_Number */
+	const char* valueString; /* The item's string, if type==Json_String */
+	int valueInt; /* The item's number, if type==Json_Number */
+	float valueFloat; /* The item's number, if type==Json_Number */
 
 	const char* name; /* The item's name string, if this item is the child of, or is in the list of subitems of an object. */
 } Json;
 
 /* Supply a block of JSON, and this returns a Json object you can interrogate. Call Json_dispose when finished. */
-CC_EX_DLL Json* Json_create (const char* value);
+Json* Json_create (const char* value);
 
 /* Delete a Json entity and all subentities. */
-CC_EX_DLL void Json_dispose (Json* json);
-
-/* Returns the number of items in an array (or object). */
-CC_EX_DLL int Json_getSize (Json* json);
-
-/* Retrieve item number "item" from array "array". Returns NULL if unsuccessful. */
-CC_EX_DLL Json* Json_getItemAt (Json* json, int item);
+void Json_dispose (Json* json);
 
 /* Get item "string" from object. Case insensitive. */
-CC_EX_DLL Json* Json_getItem (Json* json, const char* string);
-CC_EX_DLL const char* Json_getString (Json* json, const char* name, const char* defaultValue);
-CC_EX_DLL float Json_getFloat (Json* json, const char* name, float defaultValue);
-CC_EX_DLL int Json_getInt (Json* json, const char* name, int defaultValue);
+Json* Json_getItem (Json* json, const char* string);
+const char* Json_getString (Json* json, const char* name, const char* defaultValue);
+float Json_getFloat (Json* json, const char* name, float defaultValue);
+int Json_getInt (Json* json, const char* name, int defaultValue);
 
 /* For analysing failed parses. This returns a pointer to the parse error. You'll probably need to look a few chars back to make sense of it. Defined when Json_create() returns 0. 0 when Json_create() succeeds. */
-CC_EX_DLL const char* Json_getError (void);
+const char* Json_getError (void);
 
-}} // namespace cocos2d { namespace extension {
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPINE_JSON_H_ */

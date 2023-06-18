@@ -1,27 +1,33 @@
-/*******************************************************************************
- * Copyright (c) 2013, Esoteric Software
+/******************************************************************************
+ * Spine Runtimes Software License
+ * Version 2.3
+ * 
+ * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * You are granted a perpetual, non-exclusive, non-sublicensable and
+ * non-transferable license to use, install, execute and perform the Spine
+ * Runtimes Software (the "Software") and derivative works solely for personal
+ * or internal use. Without the written permission of Esoteric Software (see
+ * Section 2 of the Spine Software License Agreement), you may not (a) modify,
+ * translate, adapt or otherwise create derivative works, improvements of the
+ * Software or develop new applications using the Software or (b) remove,
+ * delete, alter or obscure any trademarks or any copyright, trademark, patent
+ * or other intellectual property or proprietary rights notices on or in the
+ * Software, including any copy thereof. Redistributions in binary or source
+ * form must include this license and terms.
  * 
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************/
+ * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #ifndef SPINE_ATTACHMENTLOADER_H_
 #define SPINE_ATTACHMENTLOADER_H_
@@ -29,24 +35,45 @@
 #include <spine/Attachment.h>
 #include <spine/Skin.h>
 
-namespace cocos2d { namespace extension {
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-typedef struct AttachmentLoader AttachmentLoader;
-struct AttachmentLoader {
+typedef struct spAttachmentLoader {
 	const char* error1;
 	const char* error2;
 
 	const void* const vtable;
 #ifdef __cplusplus
-	AttachmentLoader () : error1(0), error2(0), vtable(0) {}
+	spAttachmentLoader () :
+					error1(0),
+					error2(0),
+					vtable(0) {
+	}
 #endif
-};
+} spAttachmentLoader;
 
-CC_EX_DLL void AttachmentLoader_dispose (AttachmentLoader* self);
+void spAttachmentLoader_dispose (spAttachmentLoader* self);
 
-/* Returns 0 to not load an attachment. If 0 is returned and AttachmentLoader.error1 is set, an error occurred. */
-CC_EX_DLL Attachment* AttachmentLoader_newAttachment (AttachmentLoader* self, Skin* skin, AttachmentType type, const char* name);
+/* Called to create each attachment. Returns 0 to not load an attachment. If 0 is returned and _spAttachmentLoader_setError was
+ * called, an error occurred. */
+spAttachment* spAttachmentLoader_createAttachment (spAttachmentLoader* self, spSkin* skin, spAttachmentType type, const char* name,
+		const char* path);
+/* Called after the attachment has been fully configured. */
+void spAttachmentLoader_configureAttachment (spAttachmentLoader* self, spAttachment* attachment);
+/* Called just before the attachment is disposed. This can release allocations made in spAttachmentLoader_configureAttachment. */
+void spAttachmentLoader_disposeAttachment (spAttachmentLoader* self, spAttachment* attachment);
 
-}} // namespace cocos2d { namespace extension {
+#ifdef SPINE_SHORT_NAMES
+typedef spAttachmentLoader AttachmentLoader;
+#define AttachmentLoader_dispose(...) spAttachmentLoader_dispose(__VA_ARGS__)
+#define AttachmentLoader_createAttachment(...) spAttachmentLoader_createAttachment(__VA_ARGS__)
+#define AttachmentLoader_configureAttachment(...) spAttachmentLoader_configureAttachment(__VA_ARGS__)
+#define AttachmentLoader_disposeAttachment(...) spAttachmentLoader_disposeAttachment(__VA_ARGS__)
+#endif
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPINE_ATTACHMENTLOADER_H_ */

@@ -1,83 +1,90 @@
-/*******************************************************************************
- * Copyright (c) 2013, Esoteric Software
+/******************************************************************************
+ * Spine Runtimes Software License
+ * Version 2.3
+ * 
+ * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * You are granted a perpetual, non-exclusive, non-sublicensable and
+ * non-transferable license to use, install, execute and perform the Spine
+ * Runtimes Software (the "Software") and derivative works solely for personal
+ * or internal use. Without the written permission of Esoteric Software (see
+ * Section 2 of the Spine Software License Agreement), you may not (a) modify,
+ * translate, adapt or otherwise create derivative works, improvements of the
+ * Software or develop new applications using the Software or (b) remove,
+ * delete, alter or obscure any trademarks or any copyright, trademark, patent
+ * or other intellectual property or proprietary rights notices on or in the
+ * Software, including any copy thereof. Redistributions in binary or source
+ * form must include this license and terms.
  * 
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************/
+ * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #include <spine/Slot.h>
 #include <spine/extension.h>
-#include <spine/Skeleton.h>
-
-namespace cocos2d { namespace extension {
 
 typedef struct {
-	Slot super;
+	spSlot super;
 	float attachmentTime;
-} _Internal;
+} _spSlot;
 
-Slot* Slot_create (SlotData* data, Skeleton* skeleton, Bone* bone) {
-	Slot* self = SUPER(NEW(_Internal));
-	CONST_CAST(SlotData*, self->data) = data;
-	CONST_CAST(Skeleton*, self->skeleton) = skeleton;
-	CONST_CAST(Bone*, self->bone) = bone;
-	Slot_setToSetupPose(self);
+spSlot* spSlot_create (spSlotData* data, spBone* bone) {
+	spSlot* self = SUPER(NEW(_spSlot));
+	CONST_CAST(spSlotData*, self->data) = data;
+	CONST_CAST(spBone*, self->bone) = bone;
+	spSlot_setToSetupPose(self);
 	return self;
 }
 
-void Slot_dispose (Slot* self) {
+void spSlot_dispose (spSlot* self) {
+	FREE(self->attachmentVertices);
 	FREE(self);
 }
 
-void Slot_setAttachment (Slot* self, Attachment* attachment) {
-	CONST_CAST(Attachment*, self->attachment) = attachment;
-	SUB_CAST(_Internal, self) ->attachmentTime = self->skeleton->time;
+void spSlot_setAttachment (spSlot* self, spAttachment* attachment) {
+	if (attachment == self->attachment) return;
+	CONST_CAST(spAttachment*, self->attachment) = attachment;
+	SUB_CAST(_spSlot, self)->attachmentTime = self->bone->skeleton->time;
+	self->attachmentVerticesCount = 0;
 }
 
-void Slot_setAttachmentTime (Slot* self, float time) {
-	SUB_CAST(_Internal, self) ->attachmentTime = self->skeleton->time - time;
+void spSlot_setAttachmentTime (spSlot* self, float time) {
+	SUB_CAST(_spSlot, self)->attachmentTime = self->bone->skeleton->time - time;
 }
 
-float Slot_getAttachmentTime (const Slot* self) {
-	return self->skeleton->time - SUB_CAST(_Internal, self) ->attachmentTime;
+float spSlot_getAttachmentTime (const spSlot* self) {
+	return self->bone->skeleton->time - SUB_CAST(_spSlot, self) ->attachmentTime;
 }
 
-void Slot_setToSetupPose (Slot* self) {
-	Attachment* attachment = 0;
+void spSlot_setToSetupPose (spSlot* self) {
+	spAttachment* attachment = 0;
+
 	self->r = self->data->r;
 	self->g = self->data->g;
 	self->b = self->data->b;
 	self->a = self->data->a;
 
-	if (self->data->attachmentName) {
+	if (!self->data->attachmentName)
+		spSlot_setAttachment(self, 0);
+	else {
 		/* Find slot index. */
 		int i;
-		for (i = 0; i < self->skeleton->data->slotCount; ++i) {
-			if (self->data == self->skeleton->data->slots[i]) {
-				attachment = Skeleton_getAttachmentForSlotIndex(self->skeleton, i, self->data->attachmentName);
+		for (i = 0; i < self->bone->skeleton->data->slotsCount; ++i) {
+			if (self->data == self->bone->skeleton->data->slots[i]) {
+				attachment = spSkeleton_getAttachmentForSlotIndex(self->bone->skeleton, i, self->data->attachmentName);
 				break;
 			}
 		}
+		CONST_CAST(spAttachment*, self->attachment) = 0;
+		spSlot_setAttachment(self, attachment);
 	}
-	Slot_setAttachment(self, attachment);
 }
-
-}} // namespace cocos2d { namespace extension {

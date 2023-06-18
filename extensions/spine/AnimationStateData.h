@@ -1,27 +1,33 @@
-/*******************************************************************************
- * Copyright (c) 2013, Esoteric Software
+/******************************************************************************
+ * Spine Runtimes Software License
+ * Version 2.3
+ * 
+ * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * You are granted a perpetual, non-exclusive, non-sublicensable and
+ * non-transferable license to use, install, execute and perform the Spine
+ * Runtimes Software (the "Software") and derivative works solely for personal
+ * or internal use. Without the written permission of Esoteric Software (see
+ * Section 2 of the Spine Software License Agreement), you may not (a) modify,
+ * translate, adapt or otherwise create derivative works, improvements of the
+ * Software or develop new applications using the Software or (b) remove,
+ * delete, alter or obscure any trademarks or any copyright, trademark, patent
+ * or other intellectual property or proprietary rights notices on or in the
+ * Software, including any copy thereof. Redistributions in binary or source
+ * form must include this license and terms.
  * 
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************/
+ * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #ifndef SPINE_ANIMATIONSTATEDATA_H_
 #define SPINE_ANIMATIONSTATEDATA_H_
@@ -29,21 +35,43 @@
 #include <spine/Animation.h>
 #include <spine/SkeletonData.h>
 
-namespace cocos2d { namespace extension {
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-typedef struct {
-	SkeletonData* const skeletonData;
+typedef struct spAnimationStateData {
+	spSkeletonData* const skeletonData;
+	float defaultMix;
 	const void* const entries;
-} AnimationStateData;
 
-CC_EX_DLL AnimationStateData* AnimationStateData_create (SkeletonData* skeletonData);
-CC_EX_DLL void AnimationStateData_dispose (AnimationStateData* self);
+#ifdef __cplusplus
+	spAnimationStateData() :
+		skeletonData(0),
+		defaultMix(0),
+		entries(0) {
+	}
+#endif
+} spAnimationStateData;
 
-CC_EX_DLL void AnimationStateData_setMixByName (AnimationStateData* self, const char* fromName, const char* toName, float duration);
-CC_EX_DLL void AnimationStateData_setMix (AnimationStateData* self, Animation* from, Animation* to, float duration);
+spAnimationStateData* spAnimationStateData_create (spSkeletonData* skeletonData);
+void spAnimationStateData_dispose (spAnimationStateData* self);
+
+void spAnimationStateData_setMixByName (spAnimationStateData* self, const char* fromName, const char* toName, float duration);
+void spAnimationStateData_setMix (spAnimationStateData* self, spAnimation* from, spAnimation* to, float duration);
 /* Returns 0 if there is no mixing between the animations. */
-CC_EX_DLL float AnimationStateData_getMix (AnimationStateData* self, Animation* from, Animation* to);
+float spAnimationStateData_getMix (spAnimationStateData* self, spAnimation* from, spAnimation* to);
 
-}} // namespace cocos2d { namespace extension {
+#ifdef SPINE_SHORT_NAMES
+typedef spAnimationStateData AnimationStateData;
+#define AnimationStateData_create(...) spAnimationStateData_create(__VA_ARGS__)
+#define AnimationStateData_dispose(...) spAnimationStateData_dispose(__VA_ARGS__)
+#define AnimationStateData_setMixByName(...) spAnimationStateData_setMixByName(__VA_ARGS__)
+#define AnimationStateData_setMix(...) spAnimationStateData_setMix(__VA_ARGS__)
+#define AnimationStateData_getMix(...) spAnimationStateData_getMix(__VA_ARGS__)
+#endif
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPINE_ANIMATIONSTATEDATA_H_ */

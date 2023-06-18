@@ -1,27 +1,33 @@
-/*******************************************************************************
- * Copyright (c) 2013, Esoteric Software
+/******************************************************************************
+ * Spine Runtimes Software License
+ * Version 2.3
+ * 
+ * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * You are granted a perpetual, non-exclusive, non-sublicensable and
+ * non-transferable license to use, install, execute and perform the Spine
+ * Runtimes Software (the "Software") and derivative works solely for personal
+ * or internal use. Without the written permission of Esoteric Software (see
+ * Section 2 of the Spine Software License Agreement), you may not (a) modify,
+ * translate, adapt or otherwise create derivative works, improvements of the
+ * Software or develop new applications using the Software or (b) remove,
+ * delete, alter or obscure any trademarks or any copyright, trademark, patent
+ * or other intellectual property or proprietary rights notices on or in the
+ * Software, including any copy thereof. Redistributions in binary or source
+ * form must include this license and terms.
  * 
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************/
+ * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #ifndef SPINE_SKELETONJSON_H_
 #define SPINE_SKELETONJSON_H_
@@ -32,21 +38,36 @@
 #include <spine/Atlas.h>
 #include <spine/Animation.h>
 
-namespace cocos2d { namespace extension {
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-typedef struct {
+struct spAtlasAttachmentLoader;
+
+typedef struct spSkeletonJson {
 	float scale;
-	AttachmentLoader* attachmentLoader;
+	spAttachmentLoader* attachmentLoader;
 	const char* const error;
-} SkeletonJson;
+} spSkeletonJson;
 
-CC_EX_DLL SkeletonJson* SkeletonJson_createWithLoader (AttachmentLoader* attachmentLoader);
-CC_EX_DLL SkeletonJson* SkeletonJson_create (Atlas* atlas);
-CC_EX_DLL void SkeletonJson_dispose (SkeletonJson* self);
+spSkeletonJson* spSkeletonJson_createWithLoader (spAttachmentLoader* attachmentLoader);
+spSkeletonJson* spSkeletonJson_create (spAtlas* atlas);
+void spSkeletonJson_dispose (spSkeletonJson* self);
 
-CC_EX_DLL SkeletonData* SkeletonJson_readSkeletonData (SkeletonJson* self, const char* json);
-CC_EX_DLL SkeletonData* SkeletonJson_readSkeletonDataFile (SkeletonJson* self, const char* path);
+spSkeletonData* spSkeletonJson_readSkeletonData (spSkeletonJson* self, const char* json);
+spSkeletonData* spSkeletonJson_readSkeletonDataFile (spSkeletonJson* self, const char* path);
 
-}} // namespace cocos2d { namespace extension {
+#ifdef SPINE_SHORT_NAMES
+typedef spSkeletonJson SkeletonJson;
+#define SkeletonJson_createWithLoader(...) spSkeletonJson_createWithLoader(__VA_ARGS__)
+#define SkeletonJson_create(...) spSkeletonJson_create(__VA_ARGS__)
+#define SkeletonJson_dispose(...) spSkeletonJson_dispose(__VA_ARGS__)
+#define SkeletonJson_readSkeletonData(...) spSkeletonJson_readSkeletonData(__VA_ARGS__)
+#define SkeletonJson_readSkeletonDataFile(...) spSkeletonJson_readSkeletonDataFile(__VA_ARGS__)
+#endif
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPINE_SKELETONJSON_H_ */
