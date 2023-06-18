@@ -1,7 +1,5 @@
 #include "HelloWorldScene.h"
 
-#include "network/HttpClient.h"
-
 #include <math.h>
 
 USING_NS_CC;
@@ -77,27 +75,6 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(pSprite, 0);
 
-    CCLog("onHttp");
-    CCHttpRequest* req = new CCHttpRequest();
-    std::vector<std::string> headers;
-    headers.push_back("User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:50.0) Gecko/20100101 Firefox/50.0");
-    req->setHeaders(headers);
-    
-    std::string url;
-    url = "https://www.baidu.com/";
-    url = "https://httpbin.org/get";
-//    url = "http://localhost:3000";
-    
-    const char *name = "cacert.pem";
-    auto caCertPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(name);
-    req->setCAPath(caCertPath);
-    
-    req->setUrl(url.c_str());
-    req->setRequestType(CCHttpRequest::kHttpGet);
-    req->setResponseCallback(this, httpresponse_selector(HelloWorld::onHttp));
-    CCHttpClient::getInstance()->send(req);
-
-    CCLOG("atoi test = %d", atoi("177"));
     return true;
 }
 
@@ -112,18 +89,4 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
     exit(0);
 #endif
 #endif
-}
-
-void HelloWorld::onHttp(CCHttpClient* client, CCHttpResponse* response)
-{
-    CCLog("%s callback.", __FUNCTION__);
-    
-    if (response && response->getResponseData() && response->getResponseData()->data())
-    {
-        std::string buf(response->getResponseData()->data());
-        CCLog("http callback data is (%s)", buf.c_str());
-    }
-    
-    CCLog("is %s, code = (%ld)", response->isSucceed() ? "ok" : "!ok", response->getResponseCode());
-    CCLog("http error msg is (%s)", response->getErrorBuffer());
 }
