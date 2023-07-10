@@ -19,12 +19,6 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
-import org.ccpkg.GameUtil;
-import org.ccpkg.Logger;
-import org.ccpkg.PluginBase;
-import org.ccpkg.PluginIAP;
-import org.ccpkg.PluginListener;
-
 import java.util.HashMap;
 import java.util.Map;
 

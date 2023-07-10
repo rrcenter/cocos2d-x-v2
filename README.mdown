@@ -116,3 +116,15 @@ distributionUrl=https://services.gradle.org/distributions/gradle-5.6.4-bin.zip
 
 
 [more](docs/readme.md)
+
+## emsdk
+
+### windows
+```shell
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+.\emsdk.bat install 2.0.34
+.\emsdk.bat activate 2.0.34
+.\emsdk_env.ps1 # Windows PowerShell
+emcc --version
+```

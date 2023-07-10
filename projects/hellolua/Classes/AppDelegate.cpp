@@ -4,10 +4,12 @@
 #include "CCLuaEngine.h"
 #include "SimpleAudioEngine.h"
 #include "Lua_extensions_CCB.h"
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include "Lua_web_socket.h"
-#endif
 #include "luabinding/engine/LuaCocosExt.h"
+
+#if CC_PLATFORM_MOBILE == 1
+#include "ccpkg/PluginAdMob.h"
+#endif //CC_PLATFORM_MOBILE
 
 using namespace CocosDenshion;
 
@@ -68,6 +70,13 @@ bool AppDelegate::applicationDidFinishLaunching()
     fs->addSearchPath("res");
 
     pEngine->executeString("require 'main'");
+
+#if CC_PLATFORM_MOBILE == 1
+    ccpkg::PluginAdMob::init();
+    ccpkg::PluginAdMob::setListener([](std::string eventName, std::string data) {
+        CCLOG("PluginAdMob callback: eventName=%s, data=%s", eventName.c_str(), data.c_str());
+    });
+#endif // #if CC_PLATFORM_MOBILE == 1
 
     return true;
 }

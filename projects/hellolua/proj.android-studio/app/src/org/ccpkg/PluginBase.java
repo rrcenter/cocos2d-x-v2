@@ -28,12 +28,6 @@ public class PluginBase {
         }
         Bridge.init((Activity) context);
         //        nativeInit((Activity) _sContext, _sContext.getClass().getClassLoader());
-
-//        String name = "org.ccpkg.PluginAdMob";
-//        initPlugin("admob", name);
-//        invoke("admob", "init", "");
-//        String ret = invokeReturnString("admob", "getVersion", "f");
-//        Log.e("rr", "getVersion"+ret);
     }
 
     public static void onStart() {

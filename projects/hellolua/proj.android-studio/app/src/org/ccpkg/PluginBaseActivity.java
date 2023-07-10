@@ -3,8 +3,6 @@ package org.ccpkg;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.ccpkg.Bridge;
-import org.ccpkg.Logger;
 import org.cocos2dx.lib.Cocos2dxActivity;
 
 public class PluginBaseActivity extends Cocos2dxActivity {
@@ -24,7 +22,6 @@ public class PluginBaseActivity extends Cocos2dxActivity {
 
         //
         try {
-            Bridge.init(this);
             PluginBase.init(this);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();

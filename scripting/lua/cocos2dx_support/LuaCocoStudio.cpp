@@ -43,7 +43,7 @@ using namespace cocos2d::ui;
 using namespace cocos2d::extension;
 using namespace CocosDenshion;
 
-
+USING_NS_TIMELINE;
 
 #include "LuaCocoStudio.h"
 
