@@ -20,6 +20,8 @@ public:
     CREATE_FUNC(HelloWorld);
 
     void testSpine();
+
+    void testRenderTexture();
 };
 
 #endif // __HELLOWORLD_SCENE_H__

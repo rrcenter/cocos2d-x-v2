@@ -6,6 +6,42 @@
 
 USING_NS_CC;
 
+void shader_setGray(cocos2d::CCNode* node)
+{
+    cocos2d::CCGLProgram* shaderProgram = new cocos2d::CCGLProgram();
+    shaderProgram->initWithVertexShaderFilename("shader/shader_gray.vsh", "shader/shader_gray.fsh");
+    shaderProgram->addAttribute(kCCAttributeNamePosition, kCCVertexAttrib_Position);
+    shaderProgram->addAttribute(kCCAttributeNameTexCoord, kCCVertexAttrib_TexCoords);
+    shaderProgram->link();
+    shaderProgram->updateUniforms();
+
+    GLint grayUniformLocation = glGetUniformLocation(shaderProgram->getProgram(), "u_gray");
+    GLint u_alphaUniformLocation = glGetUniformLocation(shaderProgram->getProgram(), "u_alpha");
+    node->setShaderProgram(shaderProgram);
+    node->getShaderProgram()->use();
+    node->getShaderProgram()->setUniformLocationWith1f(grayUniformLocation, 1.0f);
+    //node->getShaderProgram()->setUniformLocationWith1f(u_alphaUniformLocation, 200.0/255.0);
+}
+
+void shader_shadow(cocos2d::CCNode* node)
+{
+    cocos2d::CCGLProgram* shaderProgram = new cocos2d::CCGLProgram();
+    shaderProgram->initWithVertexShaderFilename("shader/shader_gray.vsh", "shader/shader_gray.fsh");
+    shaderProgram->addAttribute(kCCAttributeNamePosition, kCCVertexAttrib_Position);
+    shaderProgram->addAttribute(kCCAttributeNameTexCoord, kCCVertexAttrib_TexCoords);
+    shaderProgram->link();
+    shaderProgram->updateUniforms();
+
+    GLint u_shadowColor = glGetUniformLocation(shaderProgram->getProgram(), "u_shadowColor");
+    GLint u_shadowOffset = glGetUniformLocation(shaderProgram->getProgram(), "u_shadowOffset");
+    node->setShaderProgram(shaderProgram);
+    node->getShaderProgram()->use();
+    node->getShaderProgram()->setUniformLocationWith4f(u_shadowColor, 0.0, 0.0, 0.0, 10.0/200.0);
+    node->getShaderProgram()->setUniformLocationWith2f(u_shadowOffset, 0.0, -0.05);
+    //node->getShaderProgram()->setUniformLocationWith1f(u_alphaUniformLocation, 200.0/255.0);
+}
+
+
 CCScene* HelloWorld::scene()
 {
     // 'scene' is an autorelease object
@@ -46,6 +82,7 @@ void HelloWorld::testSpine()
     spTrackEntry* jumpEntry = skeletonNode->addAnimation(0, "jump", false, 3);
     skeletonNode->addAnimation(0, "run", true);
 
+
     skeletonNode->setStartListener(jumpEntry, [](int trackIndex) {
         CCLog("jumped!");
         });
@@ -54,9 +91,9 @@ void HelloWorld::testSpine()
     // skeletonNode->runAction(RepeatForever::create(Sequence::create(FadeOut::create(1), FadeIn::create(1), DelayTime::create(5), NULL)));
 
     CCSize windowSize = CCDirector::sharedDirector()->getWinSize();
-    skeletonNode->setPosition(ccp(windowSize.width / 2, 20));
+    skeletonNode->setPosition(ccp(windowSize.width / 2 - 100, 20));
     addChild(skeletonNode);
-
+    
     // test 2
     {
         auto skeletonNode = spine::SkeletonAnimation::createWithFile("spine/goblins-mesh.json", 
@@ -65,7 +102,7 @@ void HelloWorld::testSpine()
         skeletonNode->setSkin("goblin");
 
         CCSize windowSize = CCDirector::sharedDirector()->getWinSize();
-        skeletonNode->setPosition(ccp(windowSize.width / 2, 20));
+        skeletonNode->setPosition(ccp(windowSize.width / 2 + 200, 20));
         addChild(skeletonNode);
     }
 }
@@ -82,6 +119,9 @@ bool HelloWorld::init()
 
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
     CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
+
+    auto layer = CCLayerColor::create(ccc4(255, 255, 255, 255), visibleSize.width, visibleSize.height);
+    addChild(layer);
 
     /////////////////////////////
     // 2. add a menu item with "X" image, which is clicked to quit the program
@@ -126,7 +166,11 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(pSprite, 0);
 
+    //shader_setGray(pSprite);
+
     testSpine();
+
+    //testRenderTexture();
 
     return true;
 }
@@ -142,4 +186,37 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
     exit(0);
 #endif
 #endif
+}
+
+void HelloWorld::testRenderTexture()
+{
+    auto layer = CCLayerColor::create(ccc4(255,255,255,255), 640, 960);
+    addChild(layer);
+
+    auto rect = CCSprite::create("100x50.png");
+    rect->setPosition(ccp(100, 100));
+    layer->addChild(rect);
+
+    auto size = rect->getContentSize();
+    auto rt = CCRenderTexture::create(size.width, size.height);
+    layer->addChild(rt);
+    rt->setPosition(500, 200);
+    rt->getSprite()->setColor(ccc3(255, 0, 0));
+
+    rt->beginWithClear(0, 255, 0, 255);
+    {
+        /*
+        * -------(w,h)
+        * |         |
+        * (0,0)---->
+        */
+        auto p = rect->getPosition();
+        rect->setPosition(size / 2);
+        rect->setRotation(90);
+        rect->visit();
+        rect->setPosition(p);
+    }
+    rt->end();
+
+    
 }
