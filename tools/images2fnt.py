@@ -6,11 +6,12 @@ from PIL import Image
 # font name: _ascii_code.png / x.png
 # print(ord('0'))
 
-output_path_name = "output"
+DEFAULT_OUTPUT_NAME = 'output'
 
 def mv(src, dst):
     print(f'{src}\n->\n{dst}')
     shutil.move(src, dst)
+
 
 def create_fnt_file(fnt_name, fnt_define):
     write_file = open(fnt_name, "w")
@@ -60,7 +61,7 @@ def joint_image(out_image_name, image_dict):
     toImage.save(out_image_name)
 
 
-def make_fnt_file(pre_str, image_dict):
+def make_fnt_file(pre_str, image_dict, output_path_name):
     # print "make_fnt_file:","\n".join(image_dict)
 
     fnt_name = output_path_name + "/" + pre_str + ".fnt"
@@ -114,16 +115,19 @@ def make_fnt_file(pre_str, image_dict):
     print("*************************************************************")
 
 
-def check_and_make(str_pre, convert_list):
+def check_and_make(str_pre, convert_list, output_path_name):
     if len(convert_list) >= 4:
         print("*************************************************************")
         print(str_pre+":")
-        make_fnt_file(str_pre, convert_list)
+        make_fnt_file(str_pre, convert_list, output_path_name)
 
 
-def images2fnt(font_name = 'default', src_folder='.', dst_folder='output'):
+def images2fnt(font_name='default', src_folder='.', dst_folder=DEFAULT_OUTPUT_NAME):
     src_folder = os.path.abspath(os.path.expanduser(src_folder))
-    dst_folder = os.path.abspath(dst_folder)
+    if dst_folder == DEFAULT_OUTPUT_NAME:
+        dst_folder = os.path.join(src_folder, DEFAULT_OUTPUT_NAME)
+    else:
+        dst_folder = os.path.abspath(dst_folder)
     print(f'font name:{font_name}')
     print(f'src_folder:{src_folder}')
     print(f'dst_folder:{dst_folder}')
@@ -131,10 +135,6 @@ def images2fnt(font_name = 'default', src_folder='.', dst_folder='output'):
     os.chdir(src_folder)
     file_list = os.listdir(src_folder)
 
-    internal_output_path = os.path.join(src_folder, output_path_name)
-    os.makedirs(internal_output_path, exist_ok=True)
-
-    
     os.makedirs(dst_folder, exist_ok=True)
 
     convert_list = dict()
@@ -157,16 +157,12 @@ def images2fnt(font_name = 'default', src_folder='.', dst_folder='output'):
 
         convert_list[file_name] = ascii_code
 
-    check_and_make(str_pre, convert_list)
-
-    
-    mv(f'{internal_output_path}/{font_name}.fnt', f'{dst_folder}/{font_name}.fnt')
-    mv(f'{internal_output_path}/{font_name}.png', f'{dst_folder}/{font_name}.png')
+    check_and_make(str_pre, convert_list, dst_folder)
 
 if __name__ == '__main__':
     # python images2fnt.py -h
     # python images2fnt.py --help
     # python images2fnt.py --font_name=arial --src_folder=../projects/hellolua/raw/fnt --dst_folder=../projects/hellolua/Resources/res/fnt/
+    # python images2fnt.py --font_name=arial --src_folder=../projects/hellolua/raw/fnt
     import fire
     fire.Fire(images2fnt)
-    # images2fnt(src_folder='E:\\repos\\cocos2d-x-v2\\projects\\hellolua\\raw\\fnt')
