@@ -100,6 +100,7 @@ static bool glew_dynamic_binding()
 {
 	const char *gl_extensions = (const char*)glGetString(GL_EXTENSIONS);
 
+#if 0
 	// If the current opengl driver doesn't have framebuffers methods, check if an extension exists
 	if (glGenFramebuffers == NULL)
 	{
@@ -155,6 +156,8 @@ static bool glew_dynamic_binding()
 			return false;
 		}
 	}
+#endif
+
 	return true;
 }
 
@@ -203,6 +206,8 @@ bool CCEGLView::initGL()
     m_hRC = wglCreateContext(m_hDC);
     wglMakeCurrent(m_hDC, m_hRC);
 
+    gl2Init();//
+
     // check OpenGL version at first
     const GLubyte* glVersion = glGetString(GL_VERSION);
     CCLOG("OpenGL version = %s", glVersion);
@@ -217,14 +222,15 @@ bool CCEGLView::initGL()
 		return false;
     }
 
-    GLenum GlewInitResult = glewInit();
-    if (GLEW_OK != GlewInitResult)
-    {
-		CCMessageBox((char *)glewGetErrorString(GlewInitResult), "OpenGL error");
-        return false;
-    }
+  //  GLenum GlewInitResult = glewInit();
+  //  if (GLEW_OK != GlewInitResult)
+  //  {
+		//CCMessageBox((char *)glewGetErrorString(GlewInitResult), "OpenGL error");
+  //      return false;
+  //  }
 
-    if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
+    //if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
+    if (true)
     {
         CCLog("Ready for GLSL");
     }
@@ -233,7 +239,8 @@ bool CCEGLView::initGL()
         CCLog("Not totally ready :(");
     }
 
-    if (glewIsSupported("GL_VERSION_2_0"))
+    //if (glewIsSupported("GL_VERSION_2_0"))
+    if (true)
     {
         CCLog("Ready for OpenGL 2.0");
     }

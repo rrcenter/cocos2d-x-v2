@@ -25,6 +25,7 @@ THE SOFTWARE.
 #ifndef __CCGL_H__
 #define __CCGL_H__
 
+#if 0
 #include "GL/glew.h"
 
 #define CC_GL_DEPTH24_STENCIL8		GL_DEPTH24_STENCIL8
@@ -34,5 +35,12 @@ THE SOFTWARE.
 #define GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG                      0x8C01
 #define GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG                     0x8C02
 #define GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG                     0x8C03
+
+#else
+
+#include "GLES2/gl2.h"
+
+#endif
+
 
 #endif // __CCGL_H__

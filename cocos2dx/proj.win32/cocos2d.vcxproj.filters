@@ -103,6 +103,27 @@
     <Filter Include="support\component">
       <UniqueIdentifier>{485f1c18-d463-48d0-bcaa-a10e32aa3332}</UniqueIdentifier>
     </Filter>
+    <Filter Include="platform\third_party">
+      <UniqueIdentifier>{02e42bec-1125-47c0-b1c9-5d129652ba82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\third_party\opengles_empty">
+      <UniqueIdentifier>{aa137b89-1176-46b5-8276-9d17b8beb417}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\third_party\opengles_empty\include">
+      <UniqueIdentifier>{958c13c8-971c-431d-ad13-c45d56da60e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\third_party\opengles_empty\include\GLES2">
+      <UniqueIdentifier>{03cb12f7-f334-4180-bcd4-2bc299c79170}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\third_party\opengles_empty\include\KHR">
+      <UniqueIdentifier>{5145d7c4-a5b8-4b40-92bb-be6934155a21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\third_party\opengles_empty\src">
+      <UniqueIdentifier>{095a5def-5d37-4529-a0c0-7f395a8bb93b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\third_party\opengles_empty\src\GLES2">
+      <UniqueIdentifier>{fd4dea79-7d4c-4463-ade9-bfa3d8ae1cc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\base_nodes\CCAtlasNode.cpp">
@@ -475,6 +496,12 @@
       <Filter>support\component</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="..\platform\third_party\opengles_empty\src\GLES2\gl2.c">
+      <Filter>platform\third_party\opengles_empty\src\GLES2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\platform\third_party\opengles_empty\src\GLES2\gl2ext.c">
+      <Filter>platform\third_party\opengles_empty\src\GLES2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base_nodes\CCAtlasNode.h">
@@ -954,5 +981,17 @@
       <Filter>support\component</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="..\platform\third_party\opengles_empty\include\GLES2\gl2.h">
+      <Filter>platform\third_party\opengles_empty\include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\platform\third_party\opengles_empty\include\GLES2\gl2ext.h">
+      <Filter>platform\third_party\opengles_empty\include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\platform\third_party\opengles_empty\include\GLES2\gl2platform.h">
+      <Filter>platform\third_party\opengles_empty\include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\platform\third_party\opengles_empty\include\KHR\khrplatform.h">
+      <Filter>platform\third_party\opengles_empty\include\KHR</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
