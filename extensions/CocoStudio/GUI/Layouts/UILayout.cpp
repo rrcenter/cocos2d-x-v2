@@ -233,7 +233,7 @@ void Layout::stencilClippingVisit()
         if (once)
         {
             char warning[200] = {0};
-            std::snprintf(warning, sizeof(warning), "Nesting more than %d stencils is not supported. Everything will be drawn without stencil for this node and its childs.", g_sStencilBits);
+            snprintf(warning, sizeof(warning), "Nesting more than %d stencils is not supported. Everything will be drawn without stencil for this node and its childs.", g_sStencilBits);
             CCLOG("%s", warning);
             
             once = false;
