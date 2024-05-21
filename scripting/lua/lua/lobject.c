@@ -208,7 +208,7 @@ void luaO_chunkid (char *out, const char *source, size_t bufflen) {
       }
       else
         strcat(out, source);
-      //strcat(out, "\"]");
+      strcat(out, "\"]");
     }
   }
 }

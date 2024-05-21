@@ -75,7 +75,7 @@ static lua_Number LoadNumber(LoadState* S)
 
 static TString* LoadString(LoadState* S)
 {
- size_t size;
+ SIZE_TYPE size;
  LoadVar(S,size);
  if (size==0)
   return NULL;

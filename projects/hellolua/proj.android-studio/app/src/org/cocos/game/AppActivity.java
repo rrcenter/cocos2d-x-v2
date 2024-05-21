@@ -23,8 +23,9 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos.game;
 
-import org.ccpkg.Bridge;
-import org.ccpkg.PluginBaseActivity;
+//import org.ccpkg.Bridge;
+//import org.ccpkg.PluginBaseActivity;
+import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 
 import android.content.Context;
@@ -34,7 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class AppActivity extends PluginBaseActivity {
+public class AppActivity extends Cocos2dxActivity {
 
     static private String TAG = "AppActivity";
     @Override

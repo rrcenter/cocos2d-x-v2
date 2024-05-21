@@ -207,7 +207,7 @@
 @* of a function in debug information.
 ** CHANGE it if you want a different size.
 */
-#define LUA_IDSIZE	256//60
+#define LUA_IDSIZE	256
 
 
 /*
@@ -757,6 +757,15 @@ union luai_Cast { double l_d; long l_l; };
 ** without modifying the main part of the file.
 */
 
+#define ORIGINAL_BYTECODE 0
+
+#if ORIGINAL_BYTECODE == 1
+    #define SIZE_TYPE size_t
+
+#else
+typedef unsigned int SIZE_TYPE; // size_t = {unsigned / unsigned long}
+// #define SIZE_TYPE unsigned int // size_t
+#endif
 
 
 #endif

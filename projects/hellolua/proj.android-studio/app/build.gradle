@@ -1,8 +1,8 @@
 import org.gradle.internal.os.OperatingSystem;
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+//apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     // https://developer.android.com/distribute/best-practices/develop/target-sdk
@@ -135,15 +135,15 @@ dependencies {
     implementation project(':libcocos2dx')
 
     // admob
-    implementation 'com.google.android.gms:play-services-ads:21.3.0'
+    //implementation 'com.google.android.gms:play-services-ads:21.3.0'
     // firebase
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:31.0.2')
+    //implementation platform('com.google.firebase:firebase-bom:31.0.2')
 
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-analytics'
+    //implementation 'com.google.firebase:firebase-crashlytics'
+    //implementation 'com.google.firebase:firebase-analytics'
 
 }
 

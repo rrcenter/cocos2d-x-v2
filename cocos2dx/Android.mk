@@ -142,6 +142,9 @@ touch_dispatcher/CCTouchDispatcher.cpp \
 touch_dispatcher/CCTouchHandler.cpp \
 touch_dispatcher/CCTouch.cpp
 
+# tiny aes
+LOCAL_SRC_FILES += platform/aes/aes.c
+
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/include \
                     $(LOCAL_PATH)/kazmath/include \

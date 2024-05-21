@@ -112,6 +112,12 @@ android {
             if (project.hasProperty("RELEASE_STORE_FILE")) {
                 signingConfig signingConfigs.release
             }
+
+            externalNativeBuild {
+                ndkBuild {
+                    arguments 'NDK_DEBUG=0'
+                }
+            }
         }
 
         debug {
@@ -167,7 +173,7 @@ task dealWith(type:Exec) {
 //        compileArgs << project.property('PROP_LUA_ENCRYPT_SIGN')
 //    }
 
-    compileArgs << copy_to_assets_script
+    compileArgs << copy_to_assets_script << "1"
     // commandLine compileArgs
     println 'running command : ' + 'python3 ' + compileArgs.join(' ')
     exec {

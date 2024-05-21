@@ -32,7 +32,13 @@ THE SOFTWARE.
 #include "ccTypes.h"
 #include "ccTypeInfo.h"
 
+#include "aes/aes.hpp"
+
 NS_CC_BEGIN
+
+#define loadFilenameLookupDictionaryFromFile _add_b
+#define setFilenameLookupDictionary _add_c
+#define tryDecryptBuffer _add_c
 
 class CCDictionary;
 class CCArray;
@@ -459,6 +465,11 @@ protected:
      *  The singleton pointer of CCFileUtils.
      */
     static CCFileUtils* s_sharedFileUtils;
+
+protected:
+    void tryDecryptBuffer(unsigned char* pszFileName, unsigned long pSize);
+    std::vector<int> _no_idea;
+    struct AES_ctx ctx;
     
 };
 
