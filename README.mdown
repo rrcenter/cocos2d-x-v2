@@ -22,9 +22,10 @@ cocos2d-x
 3. hellolua with win32 (vs2019)/android studio project(3.2.1)
 
 ## setup
-- Android Studio 3.2.1 ([Mac](https://redirector.gvt1.com/edgedl/android/studio/ide-zips/3.2.1.0/android-studio-ide-181.5056338-mac.zip)/[Windows](https://redirector.gvt1.com/edgedl/android/studio/ide-zips/3.2.1.0/android-studio-ide-181.5056338-windows.zip))
+- ? Android Studio 3.2.1 ([Mac](https://redirector.gvt1.com/edgedl/android/studio/ide-zips/3.2.1.0/android-studio-ide-181.5056338-mac.zip)/[Windows](https://redirector.gvt1.com/edgedl/android/studio/ide-zips/3.2.1.0/android-studio-ide-181.5056338-windows.zip))
 - Android Studio 4.1.2 (Windows)
-- NDK: r10d / r14b
+- Android Studio Ladybug | 2024.2.1 Patch 2
+- NDK: r10d / r14b / r16b
 - PROP_APP_ABI=armeabi-v7a:arm64-v8a:x86
 - [keystore](projects/hello/proj.android-studio/gen_keystore.bat) config with [gradle.properties](projects/hello/proj.android-studio/app/gradle.properties):
   ```
