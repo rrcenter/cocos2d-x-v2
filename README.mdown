@@ -103,7 +103,7 @@ Set Android NDK location:
 
 https://forum.cocos.org/t/cocos2d-x3-17-as3-6-make-no-rule-to-make-target-cocos2dlua-stop/89479/4
 
-
+```
 compileSdkVersion 27
 buildToolsVersion '28.0.3'
 minSdkVersion 18
@@ -113,6 +113,6 @@ sdk.dir=/path/to/sdk
 ndk.dir=/path/to/android-ndk-r16b
 PROP_APP_ABI=armeabi-v7a:arm64-v8a
 distributionUrl=https://services.gradle.org/distributions/gradle-5.6.4-bin.zip
-
+```
 
 [more](docs/readme.md)
