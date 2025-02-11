@@ -2,7 +2,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
-
+#include "cocos-ext.h"
 
 class HelloWorld : public cocos2d::CCLayer
 {
@@ -18,6 +18,8 @@ public:
     
     // implement the "static node()" method manually
     CREATE_FUNC(HelloWorld);
+private:
+    void onHttp(cocos2d::extension::CCHttpClient* client, cocos2d::extension::CCHttpResponse* response);
 };
 
 #endif // __HELLOWORLD_SCENE_H__

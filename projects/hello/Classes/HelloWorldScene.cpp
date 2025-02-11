@@ -3,6 +3,7 @@
 #include <math.h>
 
 USING_NS_CC;
+USING_NS_CC_EXT;
 
 CCScene* HelloWorld::scene()
 {
@@ -75,6 +76,15 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(pSprite, 0);
 
+    std::string url("https://jsonplaceholder.typicode.com/posts/1");
+    CCHttpRequest *request = new CCHttpRequest();
+    request->setUrl(url.c_str());
+    request->setRequestType(CCHttpRequest::kHttpGet);
+    request->setResponseCallback(this, httpresponse_selector(HelloWorld::onHttp));
+    CCHttpClient::getInstance()->send(request);
+    request->release();
+
+    
     return true;
 }
 
@@ -89,4 +99,19 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
     exit(0);
 #endif
 #endif
+}
+
+void HelloWorld::onHttp(cocos2d::extension::CCHttpClient* client, cocos2d::extension::CCHttpResponse* response)
+{
+    CCLOG("client = %p, response = %ld", client, response->getResponseCode());
+    
+    // body
+    std::vector<char>* buffer = response->getResponseData();
+    std::string responseString(buffer->begin(), buffer->end());
+    CCLOG("Response: %s", responseString.c_str());
+    
+    // header
+    std::vector<char>* headerBuffer = response->getResponseHeader();
+    std::string headerResponseString(headerBuffer->begin(), headerBuffer->end());
+    CCLOG("Response Header: %s", headerResponseString.c_str());
 }
