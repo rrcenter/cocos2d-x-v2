@@ -44,10 +44,11 @@ typedef void* THREAD_VOID;
 NS_CC_EXT_BEGIN
 
 static pthread_t        s_networkThread;
-static pthread_mutex_t  s_requestQueueMutex;
-static pthread_mutex_t  s_responseQueueMutex;
+// static init mutex, then remove pthread_mutex_init & pthread_mutex_destroy
+static pthread_mutex_t  s_requestQueueMutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t  s_responseQueueMutex = PTHREAD_MUTEX_INITIALIZER;
 
-static pthread_mutex_t		s_SleepMutex;
+static pthread_mutex_t		s_SleepMutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t		s_SleepCondition;
 
 static unsigned long    s_asyncRequestCount = 0;
@@ -219,10 +220,10 @@ static THREAD_VOID networkThread(THREAD_VOID)
     
     if (s_requestQueue != NULL) {
         
-        pthread_mutex_destroy(&s_requestQueueMutex);
-        pthread_mutex_destroy(&s_responseQueueMutex);
+//        pthread_mutex_destroy(&s_requestQueueMutex);
+//        pthread_mutex_destroy(&s_responseQueueMutex);
         
-        pthread_mutex_destroy(&s_SleepMutex);
+//        pthread_mutex_destroy(&s_SleepMutex);
         pthread_cond_destroy(&s_SleepCondition);
 
         s_requestQueue->release();
@@ -454,10 +455,10 @@ bool CCHttpClient::lazyInitThreadSemphore()
         s_responseQueue = new CCArray();
         s_responseQueue->init();
         
-        pthread_mutex_init(&s_requestQueueMutex, NULL);
-        pthread_mutex_init(&s_responseQueueMutex, NULL);
+//        pthread_mutex_init(&s_requestQueueMutex, NULL);
+//        pthread_mutex_init(&s_responseQueueMutex, NULL);
         
-        pthread_mutex_init(&s_SleepMutex, NULL);
+//        pthread_mutex_init(&s_SleepMutex, NULL);
         pthread_cond_init(&s_SleepCondition, NULL);
 
         need_quit = false;
